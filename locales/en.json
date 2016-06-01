@@ -1,0 +1,7 @@
+{
+    "pair": {
+        "title": "Please enter your Smile IP address and ID:",
+        "sip": "IP address (e.g. 10.0.0.5)",
+        "sid": "Smile ID (e.g. bcdfghjk)"
+      }
+}

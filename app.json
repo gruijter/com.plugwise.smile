@@ -1,0 +1,50 @@
+{
+  "id": "com.plugwise.smile",
+  "name": {
+    "en": "Plugwise Smile P1",
+    "nl": "Plugwise Smile P1"
+  },
+
+  "description": {
+    "en": "Imports data from the Plugwise Smile P1 energy meter",
+    "nl": "Leest data van de Plugwise Smile P1 energie meter"
+  },
+
+  "version": "0.9.5",
+  "compatibility": "0.x || 1.x",
+  "author": {
+    "name": "Gruijter",
+    "email": "gruijter@hotmail.com"
+  },
+
+  "images": {
+    "large": "./assets/images/large.jpg",
+    "small": "./assets/images/small.jpg"
+  },
+
+"category": "tools",
+"drivers": [
+  {
+    "id": "smilep1",
+    "name": {
+      "en": "SmileP1",
+      "nl": "SmileP1"
+    },
+    "pair": [
+        {
+        "id": "pair"
+      }
+    ],
+    "images": {
+      "large": "./drivers/smilep1/assets/images/large.jpg",
+      "small": "./drivers/smilep1/assets/images/small.jpg"
+    },
+    "class": "sensor",
+    "capabilities": [
+      "measure_power",
+      "meter_power",
+      "meter_gas"
+    ]
+  }
+]
+}
