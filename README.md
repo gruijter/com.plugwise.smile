@@ -19,10 +19,9 @@ found printed on the device, or can be found in the original app from Plugwise.
 
 When using insights please select 'stepline' to get the correct visual display.
 
-==========================================================================
+===============================================================================
+
 Version changelog
 
-0.9.5
-2016_06_01
-
+v0.9.5 2016.06.01
 Release candidate
