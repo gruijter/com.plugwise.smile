@@ -37,7 +37,7 @@ module.exports.pair = function(socket) {
 
                 parseString(body, function (err, result) {
                     Homey.log(result); // check if xml/json data exists
-                    if (result!=undefined) {
+                    if (result.modules.module[0].services[0].electricity_point_meter[0].measurement[1]._ != undefined) {
                       Homey.log('Pairing successful!');
                       callback(null, result);
                     } else {
