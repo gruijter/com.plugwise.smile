@@ -37,7 +37,7 @@ module.exports.pair = function(socket) {
 
                 parseString(body, function (err, result) {
                     Homey.log(result); // check if xml/json data exists
-                    if (result.modules.module[0].services[0].electricity_point_meter[0].measurement[1]._ != undefined) {
+                    if (result.modules.module[0].services[0] != undefined) {
                       Homey.log('Pairing successful!');
                       callback(null, result);
                     } else {
@@ -215,23 +215,42 @@ function checkProduction(device_data, callback) {
 function storeNewReadings ( device_data ) {
 //  Homey.log("storing new readings");
 
+  function mapMeter (meterName) {
+    if (Object.getOwnPropertyDescriptor(device_data.readings.modules.module[0].services[0], meterName) != undefined) {
+      return Object.getOwnPropertyDescriptor(device_data.readings.modules.module[0].services[0], meterName).value
+      } else
+    if (Object.getOwnPropertyDescriptor(device_data.readings.modules.module[1].services[0], meterName) != undefined) {
+      return Object.getOwnPropertyDescriptor(device_data.readings.modules.module[1].services[0], meterName).value
+      } else
+      console.log("houston, we have a problem");
+    return false
+  }
+
+// mapping unknown data structure caused by different smart meter brands
+  var electricity_cumulative_meter = mapMeter('electricity_cumulative_meter');
+  var electricity_point_meter      = mapMeter('electricity_point_meter');
+  var electricity_interval_meter   = mapMeter('electricity_interval_meter')
+  var gas_interval_meter           = mapMeter('gas_interval_meter')
+  var gas_cumulative_meter         = mapMeter('gas_cumulative_meter')
+
+
 //readings from device
-  var electricity_point_meter_produced = parseFloat (device_data.readings.modules.module[0].services[0].electricity_point_meter[0].measurement[0]._); //electricity_point_meter_produced
-  var electricity_point_meter_consumed = parseFloat (device_data.readings.modules.module[0].services[0].electricity_point_meter[0].measurement[1]._); //electricity_point_meter_consumed
+  var electricity_point_meter_produced = parseFloat (electricity_point_meter[0].measurement[0]._); //electricity_point_meter_produced
+  var electricity_point_meter_consumed = parseFloat (electricity_point_meter[0].measurement[1]._); //electricity_point_meter_consumed
 
-  var electricity_interval_meter_offpeak_produced = parseFloat (device_data.readings.modules.module[0].services[0].electricity_interval_meter[0].measurement[0]._); //electricity_interval_meter_offpeak_produced (5min)
-  var electricity_interval_meter_peak_produced = parseFloat (device_data.readings.modules.module[0].services[0].electricity_interval_meter[0].measurement[1]._); //electricity_interval_meter_peak_produced (5min)
-  var electricity_interval_meter_offpeak_consumed = parseFloat (device_data.readings.modules.module[0].services[0].electricity_interval_meter[0].measurement[2]._); //electricity_interval_meter_offpeak_consumed (5min)
-  var electricity_interval_meter_peak_consumed = parseFloat (device_data.readings.modules.module[0].services[0].electricity_interval_meter[0].measurement[3]._); //electricity_interval_meter_peak_consumed (5min)
-  var interval_timestamp = device_data.readings.modules.module[0].services[0].electricity_cumulative_meter[0].measurement[0].$.log_date; //electricity_interval_meter timestamp (5min)
+  var electricity_interval_meter_offpeak_produced = parseFloat (electricity_interval_meter[0].measurement[0]._); //electricity_interval_meter_offpeak_produced (5min)
+  var electricity_interval_meter_peak_produced = parseFloat (electricity_interval_meter[0].measurement[1]._); //electricity_interval_meter_peak_produced (5min)
+  var electricity_interval_meter_offpeak_consumed = parseFloat (electricity_interval_meter[0].measurement[2]._); //electricity_interval_meter_offpeak_consumed (5min)
+  var electricity_interval_meter_peak_consumed = parseFloat (electricity_interval_meter[0].measurement[3]._); //electricity_interval_meter_peak_consumed (5min)
+  var interval_timestamp = electricity_cumulative_meter[0].measurement[0].$.log_date; //electricity_interval_meter timestamp (5min)
 
-  var electricity_cumulative_meter_offpeak_produced = parseFloat (device_data.readings.modules.module[0].services[0].electricity_cumulative_meter[0].measurement[0]._)/1000 ; //electricity_cumulative_meter_offpeak_produced
-  var electricity_cumulative_meter_peak_produced = parseFloat (device_data.readings.modules.module[0].services[0].electricity_cumulative_meter[0].measurement[1]._)/1000 ; //electricity_cumulative_meter_peak_produced
-  var electricity_cumulative_meter_offpeak_consumed = parseFloat (device_data.readings.modules.module[0].services[0].electricity_cumulative_meter[0].measurement[2]._)/1000 ; //electricity_cumulative_meter_offpeak_consumed
-  var electricity_cumulative_meter_peak_consumed = parseFloat (device_data.readings.modules.module[0].services[0].electricity_cumulative_meter[0].measurement[3]._)/1000 ; //electricity_cumulative_meter_peak_consumed
+  var electricity_cumulative_meter_offpeak_produced = parseFloat (electricity_cumulative_meter[0].measurement[0]._)/1000 ; //electricity_cumulative_meter_offpeak_produced
+  var electricity_cumulative_meter_peak_produced = parseFloat (electricity_cumulative_meter[0].measurement[1]._)/1000 ; //electricity_cumulative_meter_peak_produced
+  var electricity_cumulative_meter_offpeak_consumed = parseFloat (electricity_cumulative_meter[0].measurement[2]._)/1000 ; //electricity_cumulative_meter_offpeak_consumed
+  var electricity_cumulative_meter_peak_consumed = parseFloat (electricity_cumulative_meter[0].measurement[3]._)/1000 ; //electricity_cumulative_meter_peak_consumed
 
-  var gas_interval_meter = parseFloat (device_data.readings.modules.module[1].services[0].gas_interval_meter[0].measurement[0]._) ; //gas_interval_meter (1h)
-  var meter_gas = parseFloat (device_data.readings.modules.module[1].services[0].gas_cumulative_meter[0].measurement[0]._); //gas_cumulative_meter
+  var gas_interval_meter = parseFloat (gas_interval_meter[0].measurement[0]._) ; //gas_interval_meter (1h)
+  var meter_gas = parseFloat (gas_cumulative_meter[0].measurement[0]._); //gas_cumulative_meter
 
 //constructed readings
   var meter_power = parseFloat((electricity_cumulative_meter_offpeak_consumed + electricity_cumulative_meter_peak_consumed - electricity_cumulative_meter_offpeak_produced - electricity_cumulative_meter_peak_produced).toFixed(3));

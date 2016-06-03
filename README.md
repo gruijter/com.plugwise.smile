@@ -23,6 +23,9 @@ When using insights please select 'stepline' to get the correct visual display.
 
 Version changelog
 
+v0.9.7 2016.06.03
+Added meter mapping to cope with different smart meter brands
+
 v0.9.6 2016.06.02
 Improved validation process during pairing
 
