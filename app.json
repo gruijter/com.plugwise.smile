@@ -10,7 +10,7 @@
     "nl": "Leest data van de Plugwise Smile P1 energie meter"
   },
 
-  "version": "0.9.7",
+  "version": "0.9.8",
   "compatibility": "0.x || 1.x",
   "author": {
     "name": "Gruijter",
@@ -22,29 +22,144 @@
     "small": "./assets/images/small.jpg"
   },
 
-"category": "tools",
-"drivers": [
-  {
-    "id": "smilep1",
-    "name": {
-      "en": "SmileP1",
-      "nl": "SmileP1"
-    },
-    "pair": [
+  "category": "tools",
+  "drivers": [
+    {
+      "id": "smilep1",
+      "name": {
+        "en": "SmileP1",
+        "nl": "SmileP1"
+      },
+      "pair": [
+          {
+          "id": "pair"
+        }
+      ],
+      "images": {
+        "large": "./drivers/smilep1/assets/images/large.jpg",
+        "small": "./drivers/smilep1/assets/images/small.jpg"
+      },
+      "class": "sensor",
+      "capabilities": [
+        "measure_power",
+        "meter_power",
+        "meter_gas",
         {
-        "id": "pair"
+          "id": "meter_power_offpeak",
+          "type": "boolean",
+          "title": {
+              "en": "off-peak",
+              "nl": "daltarief"
+          },
+          "units": {
+              "en": "true / false"
+          },
+          "desc": {
+              "en": "Off-peak tariff is active",
+              "nl": "Daltarief is actief"
+          },
+          "decimals": 2,
+          "getable": true,
+          "setable": false
+        }
+      ]
+    }
+  ],
+  "flow":	{
+    "triggers":[
+      {
+        "id":"tariff_changed",
+        "title": {
+          "en":"Tariff has changed",
+          "nl":"Tarief is gewijzigd"
+        },
+        "args": [
+          {
+            "name": "Smile",
+            "type": "device",
+            "filter": "driver_uri=homey:app:com.plugwise.smile&driver_id=smilep1",
+            "placeholder": {
+              "en": "Which Smile device",
+              "nl": "Welk Smile apparaat"
+             }
+          }
+        ],
+        "tokens":[
+          {
+            "name":"tariff",
+            "title": {
+              "en":"off-peak",
+              "nl":"dal"
+            }
+          }
+        ]
+      },
+      {
+        "id":"power_changed",
+        "title": {
+          "en":"Power use changed",
+          "nl":"Stroomverbruik gewijzigd"
+        },
+        "args": [
+          {
+            "name": "Smile",
+            "type": "device",
+            "filter": "driver_uri=homey:app:com.plugwise.smile&driver_id=smilep1",
+            "placeholder": {
+              "en": "Which Smile device",
+              "nl": "Welk Smile apparaat"
+             }
+          }
+        ],
+        "tokens":[
+          {
+            "name":"power",
+            "title": {
+              "en":"Watt",
+              "nl":"Watt"
+            }
+          },
+          {
+            "name":"power_delta",
+            "title": {
+              "en":"+- W",
+              "nl":"+- W"
+            }
+          }
+        ]
       }
     ],
-    "images": {
-      "large": "./drivers/smilep1/assets/images/large.jpg",
-      "small": "./drivers/smilep1/assets/images/small.jpg"
-    },
-    "class": "sensor",
-    "capabilities": [
-      "measure_power",
-      "meter_power",
-      "meter_gas"
+    "conditions": [
+      {
+        "id": "offPeak",
+        "title": {
+          "en": "Tariff !{{is|isn't}} off-peak",
+          "nl": "Tarief !{{is|is niet}} dal"
+        },
+        "args": [
+          {
+            "name": "Smile",
+            "type": "device",
+            "filter": "driver_uri=homey:app:com.plugwise.smile&driver_id=smilep1",
+            "placeholder": {
+              "en": "Which Smile device",
+              "nl": "Welk Smile apparaat"
+             }
+          }
+        ]
+      }
     ]
-  }
-]
+  },
+  "screensavers": [
+		{
+			"name": "smile_power",
+			"title": {
+				"en": "Plugwise Smile P1 Power",
+				"nl": "Plugwise Smile P1 Energie"
+			}
+		}
+  ],
+  "permissions": [
+    "homey:manager:ledring"
+  ]
 }
