@@ -41,17 +41,19 @@ module.exports.pair = function(socket) {
             });
 
             res.on('end', function() {
-                //Homey.log(body);
+                Homey.log(body);
 
                 parseString(body, function (err, result) {
-                    Homey.log(result); // check if xml/json data exists
+                  //Homey.log(result); // check if xml/json data exists
+                  if (result != undefined) {
                     if (result.modules.module[0].services[0] != undefined) {
                       Homey.log('Pairing successful!');
                       callback(null, result);
-                    } else {
-                      Homey.log('Error during pairing');
-                      callback(res.statusCode, null);
+                      return;
                     }
+                  }
+                  Homey.log('Error during pairing');
+                  callback(res.statusCode, null);
                 })
             })
 
@@ -164,19 +166,20 @@ function checkProduction(device_data, callback) {
 
           parseString(body, function (err, result) {
 
-              if (result.modules.module[0].services[0]!=undefined) {     // check if xml/json data exists
+            if (result != undefined) {      // check if json data exists
+              if (result.modules.module[0].services[0]!=undefined) {     // check if json data has correct structure
                 Homey.log('New smile data received');
                 module.exports.setAvailable(devices[device_data.id]);
                 device_data.readings=result;
                 storeNewReadings(device_data);
                 callback();
-
-              } else {
-                Homey.log('Error reading smile');
-                module.exports.setUnavailable(devices[device_data.id], err );
+                return;
               }
+            }
+            Homey.log('Error reading smile');
+            module.exports.setUnavailable(devices[device_data.id], err );
           })
-      })
+    })
 
   }).on('error', function(err) {
         Homey.log("Got error: " + err.message);
@@ -257,7 +260,7 @@ function storeNewReadings ( device_data ) {
       tariff: device_data.last_offPeak
       },
       null,
-      devices[device_data.id].id
+      devices[device_data.id].id //.id needs to be removed for Homey firmware 0.8.38+
     );
   };
 
@@ -271,7 +274,7 @@ function storeNewReadings ( device_data ) {
       power_delta: measure_power_delta
     },
       null,
-      devices[device_data.id].id
+      devices[device_data.id].id //.id needs to be removed for Homey firmware 0.8.38+
     );
 //adapt ledRing to match
       ledRing.change(measure_power, function (returntext) {
