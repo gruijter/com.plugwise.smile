@@ -30,10 +30,11 @@ When using insights please select 'stepline' to get the correct visual display.
 Version changelog
 
 v0.9.8 2016.06.13
-Added trigger cards and tokens for power change and tariff change. Added
-condition card for tariff change. Added ledring screensaver. Changed meter power
-to wH instead of kWh to match Homey firmware 0.8.35+. Improved connection
-validation after successful pairing. Some code optimizations.
+Fixed bug that made app not work correctly for firmware 0.8.37+. Added trigger
+cards and tokens for power change and tariff change. Added condition card for
+tariff change. Added ledring screensaver. Changed meter power to wH instead of
+kWh to match Homey firmware 0.8.35+. Improved connection validation after
+successful pairing. Some code optimizations.
 
 v0.9.7 2016.06.03
 Added meter mapping to cope with different smart meter brands

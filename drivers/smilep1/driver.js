@@ -127,7 +127,8 @@ function initDevice(device_data) {
             last_measure_power_produced       : 0,    // "measure_power_produced" (W) capability to be added
             last_interval_timestamp           : "",   // e.g. "2016-05-31T17:45:00+02:00" timestamp of 5 minutes interval reading
             last_offPeak                      : true, //"meter_power_offpeak" (true/false) capability to be added
-            readings   : {} //or device_data.readings
+            readings                          : {},   //or device_data.readings
+            homey_device                      : device_data // device_data object from moment of pairing
     };
 
     Homey.log(devices[device_data.id] );
@@ -169,22 +170,22 @@ function checkProduction(device_data, callback) {
             if (result != undefined) {      // check if json data exists
               if (result.modules.module[0].services[0]!=undefined) {     // check if json data has correct structure
                 Homey.log('New smile data received');
-                module.exports.setAvailable(devices[device_data.id]);
+                module.exports.setAvailable(devices[device_data.id].homey_device);
                 device_data.readings=result;
                 storeNewReadings(device_data);
-                callback();
+                callback(); // no need for callback I think.....
                 return;
               }
             }
             Homey.log('Error reading smile');
-            module.exports.setUnavailable(devices[device_data.id], err );
+            module.exports.setUnavailable(devices[device_data.id].homey_device, err );
           })
     })
 
   }).on('error', function(err) {
         Homey.log("Got error: " + err.message);
         Homey.log('Error reading smile');
-        module.exports.setUnavailable(devices[device_data.id], err.message);
+        module.exports.setUnavailable(devices[device_data.id].homey_device, err.message);
       });
 }
 
@@ -260,21 +261,21 @@ function storeNewReadings ( device_data ) {
       tariff: device_data.last_offPeak
       },
       null,
-      devices[device_data.id].id //.id needs to be removed for Homey firmware 0.8.38+
+      devices[device_data.id].homey_device
     );
   };
 
 
 //  Homey.log(measure_power);
   if (measure_power != device_data.last_measure_power) {
-    module.exports.realtime(devices[device_data.id], "measure_power", measure_power);
+    module.exports.realtime(devices[device_data.id].homey_device, "measure_power", measure_power);
 // Trigger flow for power_changed
     Homey.manager('flow').triggerDevice('power_changed', {
       power: measure_power,
       power_delta: measure_power_delta
     },
       null,
-      devices[device_data.id].id //.id needs to be removed for Homey firmware 0.8.38+
+      devices[device_data.id].homey_device
     );
 //adapt ledRing to match
       ledRing.change(measure_power, function (returntext) {
@@ -286,12 +287,12 @@ function storeNewReadings ( device_data ) {
 
 //  Homey.log(meter_power);
   if (meter_power != device_data.last_meter_power) {
-    module.exports.realtime(devices[device_data.id], "meter_power", meter_power)
+    module.exports.realtime(devices[device_data.id].homey_device, "meter_power", meter_power)
   }
 
 //  Homey.log(meter_gas);
   if (meter_gas != device_data.last_meter_gas) {
-    module.exports.realtime(devices[device_data.id], "meter_gas", meter_gas)
+    module.exports.realtime(devices[device_data.id].homey_device, "meter_gas", meter_gas)
   }
 
 
