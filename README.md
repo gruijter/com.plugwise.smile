@@ -5,7 +5,7 @@ IP is used, so there is no need for the Plugwise Stretch.
 
 The app logs and provides flow cards for the following data:
 * Actual power usage/production (W, 10s interval for usage, 5 min for production)
-* Totalized power meter (kWh, 5 min updates)
+* Totalized power meter (Wh, 5 min updates)
 * Gas meter (m3, 1 hour updates)
 
 Additional flow cards for conditional flow and to trigger events:
