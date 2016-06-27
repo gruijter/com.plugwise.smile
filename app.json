@@ -10,8 +10,8 @@
     "nl": "Leest data van de Plugwise Smile P1 energie meter"
   },
 
-  "version": "0.9.8",
-  "compatibility": "0.x || 1.x",
+  "version": "0.9.9",
+  "compatibility": ">=0.8.37 || 1.x",
   "author": {
     "name": "Gruijter",
     "email": "gruijter@hotmail.com"
@@ -35,6 +35,52 @@
           "id": "pair"
         }
       ],
+      "settings": [
+        {
+          "type": "group",
+          "label": {
+            "en": "Smile P1 settings",
+            "nl": "Smile P1 instellingen"
+          },
+          "children": [
+            {
+              "id": "smileId",
+              "type": "text",
+              "label": {
+                "en": "Smile ID",
+                "nl": "Smile ID"
+              },
+              "attr": {"disabled": true}
+            },
+            {
+              "id": "smileIp",
+              "type": "text",
+              "label": {
+                "en": "IP address",
+                "nl": "IP adres"
+              }
+            },
+            {
+              "id": "ledring_usage_limit",
+              "type": "number",
+              "label": {
+                "en": "Ledring screensaver max power (W)",
+                "nl": "Ledring screensaver max gebruik (W)"
+              },
+              "attr": { "min": 0 }
+            },
+            {
+              "id": "ledring_production_limit",
+              "type": "number",
+              "label": {
+                "en": "Ledring screensaver max production (W)",
+                "nl": "Ledring screensaver max productie (W)"
+              },
+              "attr": { "min": 0 }
+            }
+          ]
+        }
+      ],
       "images": {
         "large": "./drivers/smilep1/assets/images/large.jpg",
         "small": "./drivers/smilep1/assets/images/small.jpg"
@@ -43,25 +89,7 @@
       "capabilities": [
         "measure_power",
         "meter_power",
-        "meter_gas",
-        {
-          "id": "meter_power_offpeak",
-          "type": "boolean",
-          "title": {
-              "en": "off-peak",
-              "nl": "daltarief"
-          },
-          "units": {
-              "en": "true / false"
-          },
-          "desc": {
-              "en": "Off-peak tariff is active",
-              "nl": "Daltarief is actief"
-          },
-          "decimals": 2,
-          "getable": true,
-          "setable": false
-        }
+        "meter_gas"
       ]
     }
   ],

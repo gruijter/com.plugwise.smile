@@ -56,56 +56,78 @@ $(function(){
 			}, function( err, result ){
 
 			$('.smile-status').removeClass('visible');
-			if(!err) {
+			if(!err) {																// connection validation successful, start device pairing
 				$('.smile-ok').addClass('visible');
 				$('.smile-err-msg').html('');
 
-				var data_init = {
+				var device_data_init = {
 					id: smileId,
-					name: "Smile_"+smileId,
-					smileIp: smileIp,
-					smileId: smileId,
 					readings: result //JSON result while pairing is permanently stored in Homey device
 				};
 
+				var settings_init = {
+					name: "Smile_"+smileId,
+					smileIp										: smileIp,
+					smileId										: smileId,
+					ledring_usage_limit				: 3000,
+					ledring_production_limit	: 3000,
+				};
+
 				Homey.addDevice({
+					data	: device_data_init,
 					name	: "Smile_"+smileId,
-					data	: data_init,
+					settings: settings_init,
 					capabilities: [
-									"measure_power",
-									"meter_power",
-									"meter_gas",
-	/*								{
-						        "id": "offpeak",
-						        "type": "boolean",
-						        "title": {
-						          "en": "off-peak",
-						          "nl": "laag tarief"
-						        },
-						        "desc": {
-						          "en": "Is off-peak tarriff active?",
-						          "nl": "Is laag tarief actief?"
-						        },
-						        "getable": true,
-						        "setable": false
-						      } */
-								]
-				}, function( err, result ){
-					if( err ) return Homey.alert(err.message || err.toString());
-					Homey.emit('add_device', data_init, function( err, result ){
-						if( err ) return Homey.alert(err.message || err.toString());
-						Homey.done();
-					})
-				})
-			} else {
-				$('.smile-err').addClass('visible');
-				$('.smile-err-msg').html( err.message || err.toString() );
-			}
-		})
+							"measure_power",
+							"meter_power",
+							"meter_gas",
+							{
+				        "id": "meter_offpeak",
+				        "type": "boolean",
+				        "title": {
+				          "en": "off-peak",
+				          "nl": "laag tarief"
+				        },
+				        "desc": {
+				          "en": "Is off-peak tarriff active?",
+				          "nl": "Is laag tarief actief?"
+				        },
+				        "getable": true,
+				        "setable": false
+				      }
+						]
 
-	});
-})
+					}, function( err, result ){
+						if( err ) {
+							return Homey.alert(err.message || err.toString());
+						} else {
 
-</script>
+									Homey.done()	}	// Close the pairing window
 
-</script>
+
+		//							remove below for firmware 8.33+
+/*
+								Homey.emit('init_device', device_data_init, function( err, result ){
+								if( err ) {
+									return Homey.alert(err.message || err.toString());
+								} else {
+									Homey.done();		// Close the pairing window
+								}
+							})
+						}
+*/
+
+					})		// end of addDevice
+
+				} else {			//connection validation unsuccessfull
+					$('.smile-err').addClass('visible');
+					$('.smile-err-msg').html( err.message || err.toString() );
+				}
+			})	//end of validate / pairing procedure
+
+		});
+	})
+
+	</script>
+
+	</script>

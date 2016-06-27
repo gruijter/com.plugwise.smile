@@ -49,13 +49,20 @@ Homey.log("ledring.js started");
 //}      // End smile_power animation init
 
 
-module.exports.change = function (measure_power, callback) {
+module.exports.change = function (device_data, measure_power, callback) {
 
-  var limit = (24 * measure_power / 3000).toFixed(0);
-//  Homey.log("limit is: "+limit);
-  if (limit > 24) { limit = 24};
+  Homey.log("entering ledring change");
 
-  if (limit >= 0) {             // consuming power makes ledring red
+  if (measure_power>=0) {     // consuming power makes ledring red
+
+    if (device_data.ledring_usage_limit==0) {  // ignore change when limit setting is 0
+      callback("ledring not changed");
+      return
+    }
+
+    var limit = (24 * measure_power / device_data.ledring_usage_limit).toFixed(0);
+    //Homey.log("limit is: "+limit);
+    if (limit > 24) { limit = 24};
     for( var pixel = 0; pixel < 24; pixel++ ) {
       if( pixel < limit) {
         frame_smile_power[pixel]={
@@ -68,8 +75,17 @@ module.exports.change = function (measure_power, callback) {
         }
       }
     frames_smile_power[0]=frame_smile_power;
-  } else {
-      limit = -limit;          // producing power makes ledring blue
+  }
+
+  else {             // producing power makes ledring blue
+
+    if (device_data.ledring_production_limit==0) {  // ignore change when limit setting is 0
+      callback("ledring not changed");
+      return
+    };
+
+      var limit = -(24 * measure_power / device_data.ledring_production_limit).toFixed(0);
+      //Homey.log("limit is: "+limit);
       if (limit > 24) { limit = 24};
       for( var pixel = 0; pixel < 24; pixel++ ) {
           if( pixel < limit) {
@@ -84,6 +100,7 @@ module.exports.change = function (measure_power, callback) {
         }
       frames_smile_power[0]=frame_smile_power;
     }
+
   animation_smile_power.updateFrames(frames_smile_power);
   callback("ledring changed");
 
