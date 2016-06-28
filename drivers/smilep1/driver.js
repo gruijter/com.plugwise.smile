@@ -413,7 +413,7 @@ function storeNewReadings ( device_data ) {
 
     // log new value for Insights
     Homey.manager('insights').createEntry( 'offPeak',
-    device_data.last_offPeak,
+    offPeak,
     new Date(), function(err, success){
       if( err ) return Homey.error(err);
       }
