@@ -29,10 +29,11 @@ When using insights please select 'stepline' to get the correct visual display.
 
 Version changelog
 
-v0.9.9 2016.06.28 Added settings for device card. Ledring settings added. New
+v0.9.9 2016.07.05 Added settings for device card. Ledring settings added. New
 internal device datastructure and migration from v0.9.8. Init after pairing
 changed to Homey firmware compatibility 0.8.33+. Code cleanup and optimizations.
-Testing capability and insights (again) for Tariff.
+Testing insights (again) for Tariff. Fixed bug for occasional crash on device
+delete. Fix for crash when no gasmeter present.
 
 v0.9.8 2016.06.13
 Fixed bug that made app not work correctly for firmware 0.8.37+. Added trigger
