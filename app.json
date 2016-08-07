@@ -48,6 +48,10 @@
         "en": "Gas usage (previous hour)",
         "nl": "Gasverbruik (vorige uur)"
       },
+      "units": {
+        "en": "m\u00B3",
+        "nl": "m\u00B3"
+      },
       "getable": true,
       "setable": false
     }
@@ -75,7 +79,11 @@
 
       "mobile": {
         "components": [
-        {
+          {
+            "id": "icon",
+            "capabilities": [ "meter_offPeak" ]
+          },
+          {
             "id": "sensor",
             "capabilities": [
               "measure_power",
