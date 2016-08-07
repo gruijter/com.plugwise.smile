@@ -1,19 +1,19 @@
-# Plugwise smile P1
+# Plugwise smile P1 #
 
 Homey app to integrate Plugwise Smile P1 energy meter. A direct connection over
 IP is used, so there is no need for the Plugwise Stretch.
 
 The app logs and provides flow cards for the following data:
-* Actual power usage/production (W, 10s interval for usage, 5 min for production)
-* Totalized power meter (Wh, 5 min updates)
-* Gas meter (m3, 1 hour updates)
+- Actual power usage/production (W, 10s interval for usage, 5 min for production)
+- Totalized power meter (Wh, 5 min updates)
+- Gas meter (m3, 1 hour updates)
 
 Additional flow cards for conditional flow and to trigger events:
-* Tariff change (off-peak, true or false)
+- Tariff change (off-peak, true or false)
 
 Ledring screensaver:
-* See how much energy you are using or producing just by looking at your Homey!
-* Is the wash-dryer ready? Am I now producing power to the grid?
+- See how much energy you are using or producing just by looking at your Homey!
+- Is the wash-dryer ready? Am I now producing power to the grid?
 
 The power is totalized for consumed and produced power, during off-peak and
 peak hours. Production to the powergrid is displayed as negative watts.
@@ -25,10 +25,17 @@ found printed on the device, or can be found in the original app from Plugwise.
 
 When using insights please select 'stepline' to get the correct visual display.
 
+### Donate: ###
+If you like the app you can show your appreciation by posting it in the [forum],
+and if you really like it you can donate. Feature requests can also be placed on
+the forum.
+
+[![Paypal donate][pp-donate-image]][pp-donate-link]
 ===============================================================================
 
 Version changelog
 
+```
 v0.9.10 2016.08.07 Modified for compatibility to Homey firmware 0.9.2+. Added
 custom capabilities for gas usage and off-peak. Logs for these are still missing.
 
@@ -53,3 +60,7 @@ Improved validation process during pairing
 
 v0.9.5 2016.06.01
 Release candidate
+```
+[forum]: https://forum.athom.com/discussion/1587
+[pp-donate-link]: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=M9M847YNL7SB2
+[pp-donate-image]: https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif
