@@ -25,7 +25,7 @@ found printed on the device, or can be found in the original app from Plugwise.
 
 When using insights please select 'stepline' to get the correct visual display.
 
-### Donate: ###
+##### Donate: #####
 If you like the app you can show your appreciation by posting it in the [forum],
 and if you really like it you can donate. Feature requests can also be placed on
 the forum.
