@@ -10,8 +10,8 @@
     "nl": "Leest data van de Plugwise Smile P1 energie meter"
   },
 
-  "version": "0.9.9",
-  "compatibility": ">=0.8.37 || 1.x",
+  "version": "0.9.10",
+  "compatibility": ">=0.9.2 || 1.x",
   "author": {
     "name": "Gruijter",
     "email": "gruijter@hotmail.com"
@@ -22,7 +22,37 @@
     "small": "./assets/images/small.jpg"
   },
 
-  "category": "tools",
+  "category": ["tools","climate"],
+
+  "capabilities": {
+    "meter_offPeak": {
+      "type": "boolean",
+      "title": {
+        "en": "Off-peak",
+        "nl": "Laag tarief"
+      },
+      "desc": {
+        "en": "Is off-peak tarriff active?",
+        "nl": "Is laag tarief actief?"
+      },
+      "getable": true,
+      "setable": false
+    },
+    "measure_gas": {
+      "type": "number",
+      "title": {
+        "en": "Gas",
+        "nl": "Gas"
+      },
+      "desc": {
+        "en": "Gas usage (previous hour)",
+        "nl": "Gasverbruik (vorige uur)"
+      },
+      "getable": true,
+      "setable": false
+    }
+  },
+
   "drivers": [
     {
       "id": "smilep1",
@@ -30,6 +60,40 @@
         "en": "SmileP1",
         "nl": "SmileP1"
       },
+      "images": {
+        "large": "./drivers/smilep1/assets/images/large.jpg",
+        "small": "./drivers/smilep1/assets/images/small.jpg"
+      },
+      "class": "sensor",
+      "capabilities": [
+        "measure_power",
+        "meter_offPeak",
+        "measure_gas",
+        "meter_power",
+        "meter_gas"
+      ],
+
+      "mobile": {
+        "components": [
+        {
+            "id": "sensor",
+            "capabilities": [
+              "measure_power",
+              "meter_offPeak",
+              "measure_gas",
+              "meter_power",
+              "meter_gas"
+            ],
+            "options": {
+              "icons": {
+                  "measure_gas": "./drivers/smilep1/assets/images/gas_icon.svg",
+                  "meter_offPeak": "./drivers/smilep1/assets/images/offPeak_icon.svg"
+              }
+            }
+          }
+        ]
+      },
+
       "pair": [
           {
           "id": "pair"
@@ -50,7 +114,7 @@
                 "en": "Smile ID",
                 "nl": "Smile ID"
               },
-              "attr": {"disabled": true}
+              "value": "bcdfghjk"
             },
             {
               "id": "smileIp",
@@ -58,7 +122,8 @@
               "label": {
                 "en": "IP address",
                 "nl": "IP adres"
-              }
+              },
+              "value": "0.0.0.0"
             },
             {
               "id": "ledring_usage_limit",
@@ -67,7 +132,8 @@
                 "en": "Ledring screensaver max power (W)",
                 "nl": "Ledring screensaver max gebruik (W)"
               },
-              "attr": { "min": 0 }
+              "attr": { "min": 0 },
+              "value": 3000
             },
             {
               "id": "ledring_production_limit",
@@ -76,23 +142,15 @@
                 "en": "Ledring screensaver max production (W)",
                 "nl": "Ledring screensaver max productie (W)"
               },
-              "attr": { "min": 0 }
+              "attr": { "min": 0 },
+              "value": 3000
             }
           ]
         }
-      ],
-      "images": {
-        "large": "./drivers/smilep1/assets/images/large.jpg",
-        "small": "./drivers/smilep1/assets/images/small.jpg"
-      },
-      "class": "sensor",
-      "capabilities": [
-        "measure_power",
-        "meter_power",
-        "meter_gas"
       ]
     }
   ],
+
   "flow":	{
     "triggers":[
       {

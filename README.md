@@ -11,7 +11,7 @@ The app logs and provides flow cards for the following data:
 Additional flow cards for conditional flow and to trigger events:
 * Tariff change (off-peak, true or false)
 
-New experimental ledring screensaver:
+Ledring screensaver:
 * See how much energy you are using or producing just by looking at your Homey!
 * Is the wash-dryer ready? Am I now producing power to the grid?
 
@@ -28,6 +28,9 @@ When using insights please select 'stepline' to get the correct visual display.
 ===============================================================================
 
 Version changelog
+
+v0.9.10 2016.08.07 Modified for compatibility to Homey firmware 0.9.2+. Added
+custom capabilities for gas usage and off-peak. Logs for these are still missing.
 
 v0.9.9 2016.07.05 Added settings for device card. Ledring settings added. New
 internal device datastructure and migration from v0.9.8. Init after pairing

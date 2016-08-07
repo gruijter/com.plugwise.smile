@@ -76,46 +76,13 @@ $(function(){
 				Homey.addDevice({
 					data	: device_data_init,
 					name	: "Smile_"+smileId,
-					settings: settings_init,
-					capabilities: [
-							"measure_power",
-							"meter_power",
-							"meter_gas",
-							{
-				        "id": "meter_offpeak",
-				        "type": "boolean",
-				        "title": {
-				          "en": "off-peak",
-				          "nl": "laag tarief"
-				        },
-				        "desc": {
-				          "en": "Is off-peak tarriff active?",
-				          "nl": "Is laag tarief actief?"
-				        },
-				        "getable": true,
-				        "setable": false
-				      }
-						]
-
+					settings: settings_init
 					}, function( err, result ){
 						if( err ) {
 							return Homey.alert(err.message || err.toString());
 						} else {
 
 									Homey.done()	}	// Close the pairing window
-
-
-		//							remove below for firmware 8.33+
-/*
-								Homey.emit('init_device', device_data_init, function( err, result ){
-								if( err ) {
-									return Homey.alert(err.message || err.toString());
-								} else {
-									Homey.done();		// Close the pairing window
-								}
-							})
-						}
-*/
 
 					})		// end of addDevice
 

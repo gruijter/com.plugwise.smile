@@ -140,6 +140,21 @@ module.exports.capabilities = {
       }
     },
 
+
+    meter_offPeak: {
+      get: function(device_data, callback) {
+        var device = devices[device_data.id];
+        callback(null, device.last_offPeak);
+      }
+    },
+
+    measure_gas: {
+      get: function(device_data, callback) {
+        var device = devices[device_data.id];
+        callback(null, device.last_measure_gas);
+      }
+    },
+
     meter_power: {
       get: function(device_data, callback) {
         var device = devices[device_data.id];
@@ -154,12 +169,35 @@ module.exports.capabilities = {
       }
     },
 
-    meter_offpeak: {
+/*
+    meter_power.peak: {
       get: function(device_data, callback) {
         var device = devices[device_data.id];
-        callback(null, device.last_offPeak);
+        callback(null, device.last_meter_power_peak);
+      }
+    },
+
+    meter_power.offPeak: {
+      get: function(device_data, callback) {
+        var device = devices[device_data.id];
+        callback(null, device.last_meter_power_offpeak);
+      }
+    },
+
+    meter_power.producedPeak: {
+      get: function(device_data, callback) {
+        var device = devices[device_data.id];
+        callback(null, device.last_meter_power_peak_produced);
+      }
+    },
+
+    meter_power.producedOffPeak: {
+      get: function(device_data, callback) {
+        var device = devices[device_data.id];
+        callback(null, device.last_meter_power_offpeak_produced);
       }
     }
+*/
 
 };
 
@@ -264,6 +302,7 @@ function initDevice(device_data) {
       smileId    : settings.smileId,
       ledring_usage_limit               : settings.ledring_usage_limit,
       ledring_production_limit          : settings.ledring_production_limit,
+      last_measure_gas                  : 0,    //"measure_gas" (m3)
       last_meter_gas                    : 0,    //"meter_gas" (m3)
       last_measure_power                : 0,    //"measure_power" (W)
       last_meter_power                  : 0,    //"meter_power" (Wh)
@@ -342,7 +381,7 @@ function checkProduction(device_data, callback) {
 function storeNewReadings ( device_data ) {
   //Homey.log("storing new readings");
 
-  // mapping unknown data structure caused by different smart meter brands
+// mapping unknown data structure caused by different smart meter brands
   function mapMeter (meterName) {
     if (Object.getOwnPropertyDescriptor(device_data.readings.modules.module[0].services[0], meterName) != undefined) {
       return Object.getOwnPropertyDescriptor(device_data.readings.modules.module[0].services[0], meterName).value
@@ -411,8 +450,11 @@ function storeNewReadings ( device_data ) {
   };
 
 
-  // Homey.log(device_data.last_offPeak);
+// Homey.log(device_data.last_offPeak);
   if (offPeak != device_data.last_offPeak) {
+    //test new custom capabilities logging / flows
+    module.exports.realtime(devices[device_data.id].homey_device, "meter_offpeak", offPeak);
+
     // Trigger flow for tariff_changed
     Homey.manager('flow').triggerDevice('tariff_changed', {
       tariff: offPeak
@@ -428,7 +470,6 @@ function storeNewReadings ( device_data ) {
       if( err ) return Homey.error(err);
       }
     )
-
   };
 
 
@@ -458,10 +499,12 @@ function storeNewReadings ( device_data ) {
   }
 
 //  Homey.log(meter_gas);
+//  Homey.log(gas_interval_meter);
   if (meter_gas != device_data.last_meter_gas) {
-    module.exports.realtime(devices[device_data.id].homey_device, "meter_gas", meter_gas)
-  }
-
+    module.exports.realtime(devices[device_data.id].homey_device, "meter_gas", meter_gas);
+    //test new custom capabilities logging / flows
+    module.exports.realtime(devices[device_data.id].homey_device, "measure_gas", gas_interval_meter);
+  };
 
   device_data.last_interval_timestamp           = interval_timestamp;
   device_data.last_meter_power_peak             = electricity_cumulative_meter_peak_consumed;
@@ -471,6 +514,7 @@ function storeNewReadings ( device_data ) {
   device_data.last_measure_power                = measure_power;
   device_data.last_measure_power_produced       = measure_power_produced;
   device_data.last_meter_power                  = meter_power;
+  device_data.last_measure_gas                  = gas_interval_meter;
   device_data.last_meter_gas                    = meter_gas;
   device_data.last_offPeak                      = offPeak;
 
