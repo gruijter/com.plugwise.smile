@@ -421,10 +421,10 @@ function storeNewReadings ( device_data ) {
   var electricity_interval_meter_peak_consumed = Number(electricity_interval_meter[0].measurement[3]._); //electricity_interval_meter_peak_consumed (5min)
   var interval_timestamp = electricity_cumulative_meter[0].measurement[0].$.log_date; //electricity_interval_meter timestamp (5min)
 
-  var electricity_cumulative_meter_offpeak_produced = Number(electricity_cumulative_meter[0].measurement[0]._);//1000 ; //electricity_cumulative_meter_offpeak_produced
-  var electricity_cumulative_meter_peak_produced = Number(electricity_cumulative_meter[0].measurement[1]._);//1000 ; //electricity_cumulative_meter_peak_produced
-  var electricity_cumulative_meter_offpeak_consumed = Number(electricity_cumulative_meter[0].measurement[2]._);//1000 ; //electricity_cumulative_meter_offpeak_consumed
-  var electricity_cumulative_meter_peak_consumed = Number(electricity_cumulative_meter[0].measurement[3]._);//1000 ; //electricity_cumulative_meter_peak_consumed
+  var electricity_cumulative_meter_offpeak_produced = Number(electricity_cumulative_meter[0].measurement[0]._)/1000 ; //electricity_cumulative_meter_offpeak_produced
+  var electricity_cumulative_meter_peak_produced = Number(electricity_cumulative_meter[0].measurement[1]._)/1000 ; //electricity_cumulative_meter_peak_produced
+  var electricity_cumulative_meter_offpeak_consumed = Number(electricity_cumulative_meter[0].measurement[2]._)/1000 ; //electricity_cumulative_meter_offpeak_consumed
+  var electricity_cumulative_meter_peak_consumed = Number(electricity_cumulative_meter[0].measurement[3]._)/1000 ; //electricity_cumulative_meter_peak_consumed
 
 //constructed readings
   var meter_power = (electricity_cumulative_meter_offpeak_consumed + electricity_cumulative_meter_peak_consumed - electricity_cumulative_meter_offpeak_produced - electricity_cumulative_meter_peak_produced);
@@ -432,7 +432,6 @@ function storeNewReadings ( device_data ) {
   var measure_power_produced = device_data.last_measure_power_produced;
   var measure_power_delta = measure_power - device_data.last_measure_power;
   var offPeak = (electricity_interval_meter_offpeak_produced>0 || electricity_interval_meter_offpeak_consumed>0 );
-
 
   //correct measure_power for weird meter readings during production period with short peak in power use
 //  if (measure_power<=40 && device_data.last_measure_power_produced>100) {
@@ -444,13 +443,12 @@ function storeNewReadings ( device_data ) {
     measure_power_produced= 12*(electricity_cumulative_meter_offpeak_produced + electricity_cumulative_meter_peak_produced - device_data.last_meter_power_offpeak_produced - device_data.last_meter_power_peak_produced);
   };
 
-  //correct measure_power with average measure_power_produced in case point_meter_produced is always zero
+ //correct measure_power with average measure_power_produced in case point_meter_produced is always zero
   if (measure_power==0 && electricity_point_meter_produced==0) {
     measure_power = 0 - measure_power_produced;
   };
 
-
-// Homey.log(device_data.last_offPeak);
+  //Homey.log(device_data.last_offPeak);
   if (offPeak != device_data.last_offPeak) {
     //test new custom capabilities logging / flows
     module.exports.realtime(devices[device_data.id].homey_device, "meter_offpeak", offPeak);

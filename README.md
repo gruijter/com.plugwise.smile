@@ -36,6 +36,9 @@ the forum.
 Version changelog
 
 ```
+v0.9.11 2016.08.08 Fixed bug for negative power meter values. Changed power
+meter back to kWh (bug: Insights still shows Wh)
+
 v0.9.10 2016.08.07 Modified for compatibility to Homey firmware 0.9.2+. Added
 custom capabilities for gas usage and off-peak. Logs for these are still missing.
 

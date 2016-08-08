@@ -54,6 +54,24 @@
       },
       "getable": true,
       "setable": false
+    },
+    "meter_power": {
+      "type": "number",
+      "title": {
+        "en": "Power Meter",
+        "nl": "Stroommeter"
+      },
+      "desc": {
+        "en": "Power usage in kiloWatts Hour (kWh)",
+        "nl": "Stroomverbruik in kiloWatt uur (kWh)"
+      },
+      "units": {
+        "en": "kWh",
+        "nl": "kWh"
+      },
+      "min": "-999999999999",
+      "getable": true,
+      "setable": false
     }
   },
 
