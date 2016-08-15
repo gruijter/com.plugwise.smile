@@ -36,8 +36,10 @@ the forum.
 Version changelog
 
 ```
+v0.9.12 2016.08.15 Icons inverted. Bug in kWh production fixed.
+
 v0.9.11 2016.08.08 Fixed bug for negative power meter values. Changed power
-meter back to kWh (bug: Insights still shows Wh)
+meter back to kWh (bug: Insights still shows Wh). Changed off-peak icon.
 
 v0.9.10 2016.08.07 Modified for compatibility to Homey firmware 0.9.2+. Added
 custom capabilities for gas usage and off-peak. Logs for these are still missing.

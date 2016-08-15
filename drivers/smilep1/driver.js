@@ -33,16 +33,6 @@ module.exports.pair = function(socket) {
       });
     });
 
-/*
-// remove below init for firmware 8.33+; replaced by exports.added method
-    socket.on('init_device', function(device_init, callback){
-        Homey.log("initializing device ");
-        Homey.log(device_init);
-        initDevice(device_init);
-        callback(null, true);
-    });
-*/
-
 };
 
 // the `added` method is called is when pairing is done and a device has been added for firmware 8.33+
@@ -52,8 +42,6 @@ module.exports.added = function( device_data, callback ) {
     initDevice( device_data );
     callback( null, true );
 }
-
-
 
 module.exports.deleted = function(device_data, callback) {
     Homey.log('Deleting ' + device_data.id);
@@ -87,13 +75,6 @@ module.exports.settings = function(device_data, newSettingsObj, oldSettingsObj, 
 //    Homey.log(item + " new: "+newSettingsObj[item]);
 //  });
 
-/*    // obsolete code
-  if (newSettingsObj.smileId != oldSettingsObj.smileId) {
-    Homey.log('SmileId cannot change, ignoring new settings');
-    callback( "You cannot change the SmileId", null ); //  settings must not be saved
-    return
-  };
-*/
   if ( parseInt(newSettingsObj.ledring_usage_limit) < 0 || !Number.isInteger(newSettingsObj.ledring_usage_limit) ||
        parseInt(newSettingsObj.ledring_production_limit) < 0 || !Number.isInteger(newSettingsObj.ledring_production_limit) ) {
 
@@ -131,7 +112,6 @@ module.exports.settings = function(device_data, newSettingsObj, oldSettingsObj, 
 };
 
 
-
 module.exports.capabilities = {
     measure_power: {
       get: function(device_data, callback) {
@@ -139,7 +119,6 @@ module.exports.capabilities = {
         callback(null, device.last_measure_power);
       }
     },
-
 
     meter_offPeak: {
       get: function(device_data, callback) {
@@ -155,13 +134,6 @@ module.exports.capabilities = {
       }
     },
 
-    meter_power: {
-      get: function(device_data, callback) {
-        var device = devices[device_data.id];
-        callback(null, device.last_meter_power);
-      }
-    },
-
     meter_gas: {
       get: function(device_data, callback) {
         var device = devices[device_data.id];
@@ -169,29 +141,36 @@ module.exports.capabilities = {
       }
     },
 
+    meter_power: {
+      get: function(device_data, callback) {
+        var device = devices[device_data.id];
+        callback(null, device.last_meter_power);
+      }
+    }
 /*
-    meter_power.peak: {
+    ,
+    "meter_power.peak": {
       get: function(device_data, callback) {
         var device = devices[device_data.id];
         callback(null, device.last_meter_power_peak);
       }
     },
 
-    meter_power.offPeak: {
+    "meter_power.offPeak": {
       get: function(device_data, callback) {
         var device = devices[device_data.id];
         callback(null, device.last_meter_power_offpeak);
       }
     },
 
-    meter_power.producedPeak: {
+    "meter_power.producedPeak": {
       get: function(device_data, callback) {
         var device = devices[device_data.id];
         callback(null, device.last_meter_power_peak_produced);
       }
     },
 
-    meter_power.producedOffPeak: {
+    "meter_power.producedOffPeak": {
       get: function(device_data, callback) {
         var device = devices[device_data.id];
         callback(null, device.last_meter_power_offpeak_produced);
@@ -257,6 +236,7 @@ function initDevice(device_data) {
       Homey.log(settings);
 
       //migration from old v0.9.8 app with no settings in device
+      //obsolete, can be removed
       if (settings.smileId==undefined) {
         Homey.log("Migrating device from older app version");
         settings = {
@@ -440,7 +420,7 @@ function storeNewReadings ( device_data ) {
 
   //measure_power_produced 5 minutes average
   if (interval_timestamp != device_data.last_interval_timestamp && device_data.last_interval_timestamp != "") {
-    measure_power_produced= 12*(electricity_cumulative_meter_offpeak_produced + electricity_cumulative_meter_peak_produced - device_data.last_meter_power_offpeak_produced - device_data.last_meter_power_peak_produced);
+    measure_power_produced= 12000*(electricity_cumulative_meter_offpeak_produced + electricity_cumulative_meter_peak_produced - device_data.last_meter_power_offpeak_produced - device_data.last_meter_power_peak_produced);
   };
 
  //correct measure_power with average measure_power_produced in case point_meter_produced is always zero

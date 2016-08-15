@@ -10,7 +10,7 @@
     "nl": "Leest data van de Plugwise Smile P1 energie meter"
   },
 
-  "version": "0.9.10",
+  "version": "0.9.12",
   "compatibility": ">=0.9.2 || 1.x",
   "author": {
     "name": "Gruijter",
@@ -91,15 +91,15 @@
         "measure_power",
         "meter_offPeak",
         "measure_gas",
-        "meter_power",
-        "meter_gas"
+        "meter_gas",
+        "meter_power"
       ],
 
       "mobile": {
         "components": [
           {
             "id": "icon",
-            "capabilities": [ "meter_offPeak" ]
+            "capabilities": [ ]
           },
           {
             "id": "sensor",
@@ -107,8 +107,8 @@
               "measure_power",
               "meter_offPeak",
               "measure_gas",
-              "meter_power",
-              "meter_gas"
+              "meter_gas",
+              "meter_power"
             ],
             "options": {
               "icons": {
