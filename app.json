@@ -10,8 +10,8 @@
     "nl": "Leest data van de Plugwise Smile P1 energie meter"
   },
 
-  "version": "0.9.12",
-  "compatibility": ">=0.9.2 || 1.x",
+  "version": "0.9.13",
+  "compatibility": ">=0.9.x || 1.x",
   "author": {
     "name": "Gruijter",
     "email": "gruijter@hotmail.com"
@@ -52,24 +52,6 @@
         "en": "m\u00B3",
         "nl": "m\u00B3"
       },
-      "getable": true,
-      "setable": false
-    },
-    "meter_power": {
-      "type": "number",
-      "title": {
-        "en": "Power Meter",
-        "nl": "Stroommeter"
-      },
-      "desc": {
-        "en": "Power usage in kiloWatts Hour (kWh)",
-        "nl": "Stroomverbruik in kiloWatt uur (kWh)"
-      },
-      "units": {
-        "en": "kWh",
-        "nl": "kWh"
-      },
-      "min": "-999999999999",
       "getable": true,
       "setable": false
     }
@@ -135,7 +117,7 @@
           "children": [
             {
               "id": "smileId",
-              "type": "text",
+              "type": "label",
               "label": {
                 "en": "Smile ID",
                 "nl": "Smile ID"

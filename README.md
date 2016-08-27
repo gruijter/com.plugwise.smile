@@ -36,6 +36,8 @@ the forum.
 Version changelog
 
 ```
+v0.9.13 2016.08.27 Compatibility 0.9.3+
+
 v0.9.12 2016.08.15 Icons inverted. Bug in kWh production fixed.
 
 v0.9.11 2016.08.08 Fixed bug for negative power meter values. Changed power
