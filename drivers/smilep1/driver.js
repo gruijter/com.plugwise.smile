@@ -32,7 +32,6 @@ module.exports.pair = function(socket) {
         }
       });
     });
-
 };
 
 // the `added` method is called is when pairing is done and a device has been added for firmware 8.33+
@@ -60,20 +59,12 @@ module.exports.renamed = function( device_data, new_name ) {
 
 module.exports.settings = function(device_data, newSettingsObj, oldSettingsObj, changedKeysArr, callback) {
 	// run when the user has changed the device's settings in Homey.
-	// changedKeysArr contains an array of keys that have been changed, for your convenience :)
   Homey.log(devices[device_data.id].name + ' has new settings for ' + changedKeysArr);
-
-
   Homey.log(device_data);
   Homey.log('old settings: ');
   Homey.log(oldSettingsObj);
   Homey.log('new settings: ')
   Homey.log(newSettingsObj);
-
-//  changedKeysArr.forEach(function(item){
-//    Homey.log(item + " old: "+oldSettingsObj[item]);
-//    Homey.log(item + " new: "+newSettingsObj[item]);
-//  });
 
   if ( parseInt(newSettingsObj.ledring_usage_limit) < 0 || !Number.isInteger(newSettingsObj.ledring_usage_limit) ||
        parseInt(newSettingsObj.ledring_production_limit) < 0 || !Number.isInteger(newSettingsObj.ledring_production_limit) ) {
@@ -116,6 +107,10 @@ module.exports.capabilities = {
     measure_power: {
       get: function(device_data, callback) {
         var device = devices[device_data.id];
+        if (device==undefined){
+          callback(null, 0);
+          return;
+        };
         callback(null, device.last_measure_power);
       }
     },
@@ -123,6 +118,10 @@ module.exports.capabilities = {
     meter_offPeak: {
       get: function(device_data, callback) {
         var device = devices[device_data.id];
+        if (device==undefined){
+          callback(null, false);
+          return;
+        };
         callback(null, device.last_offPeak);
       }
     },
@@ -130,6 +129,10 @@ module.exports.capabilities = {
     measure_gas: {
       get: function(device_data, callback) {
         var device = devices[device_data.id];
+        if (device==undefined){
+          callback(null, 0);
+          return;
+        };
         callback(null, device.last_measure_gas);
       }
     },
@@ -137,6 +140,10 @@ module.exports.capabilities = {
     meter_gas: {
       get: function(device_data, callback) {
         var device = devices[device_data.id];
+        if (device==undefined){
+          callback(null, 0);
+          return;
+        };
         callback(null, device.last_meter_gas);
       }
     },
@@ -144,6 +151,10 @@ module.exports.capabilities = {
     meter_power: {
       get: function(device_data, callback) {
         var device = devices[device_data.id];
+        if (device==undefined){
+          callback(null, 0);
+          return;
+        };
         callback(null, device.last_meter_power);
       }
     }
@@ -234,44 +245,10 @@ function initDevice(device_data) {
     } else {    // after settings received build the new device object
       Homey.log("retrieved settings are:");
       Homey.log(settings);
-
-      //migration from old v0.9.8 app with no settings in device
-      //obsolete, can be removed
-      if (settings.smileId==undefined) {
-        Homey.log("Migrating device from older app version");
-        settings = {
-          name: device_data.name,
-          smileIp: device_data.smileIp,
-          smileId: device_data.smileId,
-          ledring_usage_limit: 3000,
-          ledring_production_limit: 3000 };
-        module.exports.setSettings( device_data, settings, function( err, settings ){
-            // ... dunno what to do here, think nothing...
-        })
-      };
-
       buildDevice(device_data, settings);
       startPolling(device_data);
-      createLog(device_data);
     }
   });
-
-  //create new log for offPeak in Homey
-  function createLog (device_data) {
-    Homey.manager('insights').createLog( 'offPeak', {
-        label: { en: 'Off-peak' , nl: 'Daltarief' },
-        type: 'boolean',
-        chart: 'stepLine'
-      },
-      function callback(err , success){
-        if( err ) return Homey.error(err);
-        Homey.manager('insights').createEntry( 'offPeak',
-        devices[device_data.id].last_offPeak,
-        new Date(), function(err, success){
-          if( err ) return Homey.error(err);
-        })
-      });
-    };
 
 
   function buildDevice (device_data, settings){
@@ -292,7 +269,7 @@ function initDevice(device_data) {
       last_meter_power_offpeak_produced : 0,    //"meter_power_offpeak_produced" (Wh) capability to be added
       last_measure_power_produced       : 0,    // "measure_power_produced" (W) capability to be added
       last_interval_timestamp           : "",   // e.g. "2016-05-31T17:45:00+02:00" timestamp of 5 minutes interval reading
-      last_offPeak                      : true, //"meter_power_offpeak" (true/false) capability to be added
+      last_offPeak                      : false,//"meter_power_offpeak" (true/false)
       readings                          : {},   //or device_data.readings
       homey_device                      : device_data // device_data object from moment of pairing
     };
@@ -360,7 +337,9 @@ function checkProduction(device_data, callback) {
 
 function storeNewReadings ( device_data ) {
   //Homey.log("storing new readings");
-
+  if (device_data == undefined){
+    return;
+  };
 // mapping unknown data structure caused by different smart meter brands
   function mapMeter (meterName) {
     if (Object.getOwnPropertyDescriptor(device_data.readings.modules.module[0].services[0], meterName) != undefined) {
@@ -430,8 +409,7 @@ function storeNewReadings ( device_data ) {
 
   //Homey.log(device_data.last_offPeak);
   if (offPeak != device_data.last_offPeak) {
-    //test new custom capabilities logging / flows
-    module.exports.realtime(devices[device_data.id].homey_device, "meter_offpeak", offPeak);
+    module.exports.realtime(devices[device_data.id].homey_device, "meter_offPeak", offPeak);
 
     // Trigger flow for tariff_changed
     Homey.manager('flow').triggerDevice('tariff_changed', {
@@ -440,16 +418,7 @@ function storeNewReadings ( device_data ) {
       null,
       devices[device_data.id].homey_device
     );
-
-    // log new value for Insights
-    Homey.manager('insights').createEntry( 'offPeak',
-    offPeak,
-    new Date(), function(err, success){
-      if( err ) return Homey.error(err);
-      }
-    )
   };
-
 
 //  Homey.log(measure_power);
   if (measure_power != device_data.last_measure_power) {
@@ -466,21 +435,19 @@ function storeNewReadings ( device_data ) {
 //adapt ledring to match
       ledring.change(devices[device_data.id], measure_power, function (returntext) {
         //reseved for callback;
-      //  Homey.log("coming back "+returntext);
       });
   };
-
 
 //  Homey.log(meter_power);
   if (meter_power != device_data.last_meter_power) {
     module.exports.realtime(devices[device_data.id].homey_device, "meter_power", meter_power)
   }
-
 //  Homey.log(meter_gas);
-//  Homey.log(gas_interval_meter);
   if (meter_gas != device_data.last_meter_gas) {
     module.exports.realtime(devices[device_data.id].homey_device, "meter_gas", meter_gas);
-    //test new custom capabilities logging / flows
+  };
+//  Homey.log(gas_interval_meter);
+  if (gas_interval_meter != device_data.last_measure_gas) {
     module.exports.realtime(devices[device_data.id].homey_device, "measure_gas", gas_interval_meter);
   };
 
@@ -495,7 +462,6 @@ function storeNewReadings ( device_data ) {
   device_data.last_measure_gas                  = gas_interval_meter;
   device_data.last_meter_gas                    = meter_gas;
   device_data.last_offPeak                      = offPeak;
-
 
   //Homey.log(device_data);
 

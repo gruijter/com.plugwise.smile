@@ -36,37 +36,29 @@ the forum.
 Version changelog
 
 ```
+v0.9.14 2016.10.01 Compatibility 0.10.1+. Breaking fw change:Device must be
+        deleted and paired again. offPeak and gas usage can now corectly logged
+        in Insights (Thank you Athom!). Fix for occasional crash.
 v0.9.13 2016.08.27 Compatibility 0.9.3+
-
 v0.9.12 2016.08.15 Icons inverted. Bug in kWh production fixed.
-
 v0.9.11 2016.08.08 Fixed bug for negative power meter values. Changed power
-meter back to kWh (bug: Insights still shows Wh). Changed off-peak icon.
-
+        meter back to kWh (bug: Insights still shows Wh). Changed off-peak icon.
 v0.9.10 2016.08.07 Modified for compatibility to Homey firmware 0.9.2+. Added
-custom capabilities for gas usage and off-peak. Logs for these are still missing.
-
-v0.9.9 2016.07.05 Added settings for device card. Ledring settings added. New
-internal device datastructure and migration from v0.9.8. Init after pairing
-changed to Homey firmware compatibility 0.8.33+. Code cleanup and optimizations.
-Testing insights (again) for Tariff. Fixed bug for occasional crash on device
-delete. Fix for crash when no gasmeter present.
-
-v0.9.8 2016.06.13
-Fixed bug that made app not work correctly for firmware 0.8.37+. Added trigger
-cards and tokens for power change and tariff change. Added condition card for
-tariff change. Added ledring screensaver. Changed meter power to wH instead of
-kWh to match Homey firmware 0.8.35+. Improved connection validation after
-successful pairing. Some code optimizations.
-
-v0.9.7 2016.06.03
-Added meter mapping to cope with different smart meter brands
-
-v0.9.6 2016.06.02
-Improved validation process during pairing
-
-v0.9.5 2016.06.01
-Release candidate
+        custom capabilities for gas usage and off-peak. Logs for these are still
+        missing.
+v0.9.9  2016.07.05 Added settings for device card. Ledring settings added. New
+        internal device datastructure and migration from v0.9.8. Init after
+        pairing changed to Homey firmware compatibility 0.8.33+. Code cleanup
+        and optimizations.Testing insights (again) for Tariff. Fixed bug for
+        occasional crash on device delete. Fix for crash when no gasmeter present.
+v0.9.8  2016.06.13 Fixed bug that made app not work correctly for firmware 0.8.37+.
+        Added trigger cards and tokens for power change and tariff change. Added
+        condition card for tariff change. Added ledring screensaver. Changed meter
+        power to wH instead of kWh to match Homey firmware 0.8.35+. Improved
+        connection validation after successful pairing. Some code optimizations.
+v0.9.7  2016.06.03 Added meter mapping to cope with different smart meter brands
+v0.9.6  2016.06.02 Improved validation process during pairing
+v0.9.5  2016.06.01 Release candidate
 ```
 [forum]: https://forum.athom.com/discussion/1587
 [pp-donate-link]: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=M9M847YNL7SB2
