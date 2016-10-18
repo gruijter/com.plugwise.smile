@@ -108,7 +108,7 @@ module.exports.capabilities = {
       get: function(device_data, callback) {
         var device = devices[device_data.id];
         if (device==undefined){
-          callback(null, 0);
+          //callback(null, 0);
           return;
         };
         callback(null, device.last_measure_power);
@@ -119,7 +119,7 @@ module.exports.capabilities = {
       get: function(device_data, callback) {
         var device = devices[device_data.id];
         if (device==undefined){
-          callback(null, false);
+          callback();//null, false);
           return;
         };
         callback(null, device.last_offPeak);
@@ -130,7 +130,7 @@ module.exports.capabilities = {
       get: function(device_data, callback) {
         var device = devices[device_data.id];
         if (device==undefined){
-          callback(null, 0);
+          callback();//null, 0);
           return;
         };
         callback(null, device.last_measure_gas);
@@ -141,7 +141,7 @@ module.exports.capabilities = {
       get: function(device_data, callback) {
         var device = devices[device_data.id];
         if (device==undefined){
-          callback(null, 0);
+          callback();//null, 0);
           return;
         };
         callback(null, device.last_meter_gas);
@@ -152,7 +152,7 @@ module.exports.capabilities = {
       get: function(device_data, callback) {
         var device = devices[device_data.id];
         if (device==undefined){
-          callback(null, 0);
+          callback();//null, 0);
           return;
         };
         callback(null, device.last_meter_power);
@@ -259,17 +259,17 @@ function initDevice(device_data) {
       smileId    : settings.smileId,
       ledring_usage_limit               : settings.ledring_usage_limit,
       ledring_production_limit          : settings.ledring_production_limit,
-      last_measure_gas                  : 0,    //"measure_gas" (m3)
-      last_meter_gas                    : 0,    //"meter_gas" (m3)
-      last_measure_power                : 0,    //"measure_power" (W)
-      last_meter_power                  : 0,    //"meter_power" (Wh)
-      last_meter_power_peak             : 0,    //"meter_power_peak" (Wh) capability to be added
-      last_meter_power_offpeak          : 0,    //"meter_power_offpeak" (Wh) capability to be added
-      last_meter_power_peak_produced    : 0,    //"meter_power_peak_produced" (Wh) capability to be added
-      last_meter_power_offpeak_produced : 0,    //"meter_power_offpeak_produced" (Wh) capability to be added
-      last_measure_power_produced       : 0,    // "measure_power_produced" (W) capability to be added
+      last_measure_gas                  : null,    //"measure_gas" (m3)
+      last_meter_gas                    : null,    //"meter_gas" (m3)
+      last_measure_power                : null,    //"measure_power" (W)
+      last_meter_power                  : null,    //"meter_power" (kWh)
+      last_meter_power_peak             : null,    //"meter_power_peak" (kWh) capability to be added
+      last_meter_power_offpeak          : null,    //"meter_power_offpeak" (kWh) capability to be added
+      last_meter_power_peak_produced    : null,    //"meter_power_peak_produced" (kWh) capability to be added
+      last_meter_power_offpeak_produced : null,    //"meter_power_offpeak_produced" (kWh) capability to be added
+      last_measure_power_produced       : null,    // "measure_power_produced" (W) capability to be added
       last_interval_timestamp           : "",   // e.g. "2016-05-31T17:45:00+02:00" timestamp of 5 minutes interval reading
-      last_offPeak                      : false,//"meter_power_offpeak" (true/false)
+      last_offPeak                      : null,//"meter_power_offpeak" (true/false)
       readings                          : {},   //or device_data.readings
       homey_device                      : device_data // device_data object from moment of pairing
     };
@@ -337,9 +337,12 @@ function checkProduction(device_data, callback) {
 
 function storeNewReadings ( device_data ) {
   //Homey.log("storing new readings");
+
+  //app is initializing
   if (device_data == undefined){
-    return;
+    return
   };
+
 // mapping unknown data structure caused by different smart meter brands
   function mapMeter (meterName) {
     if (Object.getOwnPropertyDescriptor(device_data.readings.modules.module[0].services[0], meterName) != undefined) {
