@@ -7,8 +7,6 @@ The app logs and provides flow cards for the following data:
 - Actual power usage/production (W, 10s interval for usage, 5 min for production)
 - Totalized power meter (Wh, 5 min updates)
 - Gas meter (m3, 1 hour updates)
-
-Additional flow cards for conditional flow and to trigger events:
 - Tariff change (off-peak, true or false)
 
 Ledring screensaver:
@@ -36,6 +34,7 @@ the forum.
 Version changelog
 
 ```
+v0.9.15 2016.10.18 Removing 0 readings after app restart
 v0.9.14 2016.10.01 Compatibility 0.10.1+. Breaking fw change:Device must be
         deleted and paired again. offPeak and gas usage can now corectly logged
         in Insights (Thank you Athom!). Fix for occasional crash.
