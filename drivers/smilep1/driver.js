@@ -2,6 +2,7 @@
 
 Homey.log("entering driver.js");
 
+var util = require('util');
 var ledring = require("../../ledring.js");
 var devices = {};
 var intervalId = {};
@@ -237,8 +238,11 @@ function validateConnection(server_data, callback) {  // Validate Smile connecti
 function initDevice(device_data) {
 
   Homey.log("entering initDevice");
+  Homey.log(util.inspect(device_data));
+
 
   //initDevice: retrieve device settings, buildDevice and start polling it
+  Homey.log("getting settings");
   module.exports.getSettings( device_data, function( err, settings ){
     if (err) {
       Homey.log("error retrieving device settings");
@@ -249,7 +253,6 @@ function initDevice(device_data) {
       startPolling(device_data);
     }
   });
-
 
   function buildDevice (device_data, settings){
     devices[device_data.id] = {
@@ -270,7 +273,7 @@ function initDevice(device_data) {
       last_measure_power_produced       : null,    // "measure_power_produced" (W) capability to be added
       last_interval_timestamp           : "",   // e.g. "2016-05-31T17:45:00+02:00" timestamp of 5 minutes interval reading
       last_offPeak                      : null,//"meter_power_offpeak" (true/false)
-      readings                          : {},   //or device_data.readings
+      readings                          : {},   //or settings.readings
       homey_device                      : device_data // device_data object from moment of pairing
     };
     Homey.log("init buildDevice is: " );
@@ -340,6 +343,12 @@ function storeNewReadings ( device_data ) {
 
   //app is initializing
   if (device_data == undefined){
+    return
+  };
+  if (device_data.readings == undefined){
+    return
+  };
+  if (device_data.readings.modules == undefined){
     return
   };
 

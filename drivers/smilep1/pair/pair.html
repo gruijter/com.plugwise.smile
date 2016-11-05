@@ -62,7 +62,6 @@ $(function(){
 
 				var device_data_init = {
 					id: smileId,
-					readings: result //JSON result while pairing is permanently stored in Homey device
 				};
 
 				var settings_init = {
@@ -71,6 +70,7 @@ $(function(){
 					smileId										: smileId,
 					ledring_usage_limit				: 3000,
 					ledring_production_limit	: 3000,
+					readings									: result //JSON result while pairing is permanently stored in Homey device
 				};
 
 				Homey.addDevice({

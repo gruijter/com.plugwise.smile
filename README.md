@@ -34,6 +34,8 @@ the forum.
 Version changelog
 
 ```
+v0.9.16 2016.11.05 Compatibility 0.10.9. Breaking fw change:Device must be
+        deleted and paired again. fix 'cannot read property' crash.
 v0.9.15 2016.10.18 Removing 0 readings after app restart
 v0.9.14 2016.10.01 Compatibility 0.10.1+. Breaking fw change:Device must be
         deleted and paired again. offPeak and gas usage can now corectly logged
