@@ -60,6 +60,12 @@ module.exports.renamed = function( device_data, new_name ) {
 
 module.exports.settings = function(device_data, newSettingsObj, oldSettingsObj, changedKeysArr, callback) {
 	// run when the user has changed the device's settings in Homey.
+  if (devices[device_data.id]==undefined){
+    Homey.log("not ready with device init, ignoring change");
+    callback( error, null ); //  settings must not be saved
+    return
+  };
+  
   Homey.log(devices[device_data.id].name + ' has new settings for ' + changedKeysArr);
   Homey.log(device_data);
   Homey.log('old settings: ');
