@@ -61,7 +61,7 @@ $(function(){
 				$('.smile-err-msg').html('');
 
 				var device_data_init = {
-					id: smileId,
+					id: smileId
 				};
 
 				var settings_init = {
@@ -69,8 +69,8 @@ $(function(){
 					smileIp										: smileIp,
 					smileId										: smileId,
 					ledring_usage_limit				: 3000,
-					ledring_production_limit	: 3000,
-					readings									: result //JSON result while pairing is permanently stored in Homey device
+					ledring_production_limit	: 3000//,
+//					readings									: result //JSON result while pairing is permanently stored in Homey device
 				};
 
 				Homey.addDevice({

@@ -65,7 +65,7 @@ module.exports.settings = function(device_data, newSettingsObj, oldSettingsObj, 
     callback( error, null ); //  settings must not be saved
     return
   };
-  
+
   Homey.log(devices[device_data.id].name + ' has new settings for ' + changedKeysArr);
   Homey.log(device_data);
   Homey.log('old settings: ');
@@ -244,8 +244,8 @@ function validateConnection(server_data, callback) {  // Validate Smile connecti
 function initDevice(device_data) {
 
   Homey.log("entering initDevice");
-  Homey.log(util.inspect(device_data));
-
+//  Homey.log(util.inspect(device_data));
+//  Homey.log(JSON.stringify(device_data, false, 4));
 
   //initDevice: retrieve device settings, buildDevice and start polling it
   Homey.log("getting settings");
@@ -254,7 +254,7 @@ function initDevice(device_data) {
       Homey.log("error retrieving device settings");
     } else {    // after settings received build the new device object
       Homey.log("retrieved settings are:");
-      Homey.log(settings);
+      Homey.log(util.inspect(settings, true, 10, true));
       buildDevice(device_data, settings);
       startPolling(device_data);
     }
@@ -270,6 +270,7 @@ function initDevice(device_data) {
       ledring_production_limit          : settings.ledring_production_limit,
       last_measure_gas                  : null,    //"measure_gas" (m3)
       last_meter_gas                    : null,    //"meter_gas" (m3)
+      last_gasinterval_timestamp        : "",   // e.g. "2016-11-07T15:00:00+01:00" gas_interval_meter timestamp (1h)
       last_measure_power                : null,    //"measure_power" (W)
       last_meter_power                  : null,    //"meter_power" (kWh)
       last_meter_power_peak             : null,    //"meter_power_peak" (kWh) capability to be added
@@ -376,11 +377,13 @@ function storeNewReadings ( device_data ) {
     var gas_interval_meter         = mapMeter('gas_interval_meter');
     var gas_cumulative_meter       = mapMeter('gas_cumulative_meter');
 
-    var gas_interval_meter = Number(gas_interval_meter[0].measurement[0]._) ; //gas_interval_meter (1h)
+    var gasinterval_timestamp = gas_interval_meter[0].measurement[0].$.log_date; //electricity_interval_meter timestamp (1h)
+    var measure_gas = Number(gas_interval_meter[0].measurement[0]._) ; //gas_interval_meter (1h)
     var meter_gas = Number(gas_cumulative_meter[0].measurement[0]._); //gas_cumulative_meter
   } else {
     //Homey.log("no gasmeter present");
-    var gas_interval_meter = 0;
+    var gasinterval_timestamp = "";
+    var measure_gas = 0;
     var meter_gas = 0;
   }
 
@@ -464,9 +467,9 @@ function storeNewReadings ( device_data ) {
   if (meter_gas != device_data.last_meter_gas) {
     module.exports.realtime(devices[device_data.id].homey_device, "meter_gas", meter_gas);
   };
-//  Homey.log(gas_interval_meter);
-  if (gas_interval_meter != device_data.last_measure_gas) {
-    module.exports.realtime(devices[device_data.id].homey_device, "measure_gas", gas_interval_meter);
+//  Homey.log(measure_gas);
+  if (gasinterval_timestamp != device_data.last_gasinterval_timestamp) {
+    module.exports.realtime(devices[device_data.id].homey_device, "measure_gas", measure_gas);
   };
 
   device_data.last_interval_timestamp           = interval_timestamp;
@@ -477,7 +480,8 @@ function storeNewReadings ( device_data ) {
   device_data.last_measure_power                = measure_power;
   device_data.last_measure_power_produced       = measure_power_produced;
   device_data.last_meter_power                  = meter_power;
-  device_data.last_measure_gas                  = gas_interval_meter;
+  device_data.last_gasinterval_timestamp        = gasinterval_timestamp;
+  device_data.last_measure_gas                  = measure_gas;
   device_data.last_meter_gas                    = meter_gas;
   device_data.last_offPeak                      = offPeak;
 
