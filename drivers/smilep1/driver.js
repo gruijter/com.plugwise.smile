@@ -2,6 +2,8 @@
 
 Homey.log("entering driver.js");
 
+var parseString = require('xml2js').parseString;
+var http = require('http');
 var util = require('util');
 var ledring = require("../../ledring.js");
 var devices = {};
@@ -62,7 +64,7 @@ module.exports.settings = function(device_data, newSettingsObj, oldSettingsObj, 
 	// run when the user has changed the device's settings in Homey.
   if (devices[device_data.id]==undefined){
     Homey.log("not ready with device init, ignoring change");
-    callback( error, null ); //  settings must not be saved
+    callback( 'error: device does not exist (yet)', null ); //  settings must not be saved
     return
   };
 
@@ -201,8 +203,8 @@ module.exports.capabilities = {
 function validateConnection(server_data, callback) {  // Validate Smile connection data
     Homey.log('Validating', server_data);
 
-    var parseString = require('xml2js').parseString;
-    var http = require('http');
+//    var parseString = require('xml2js').parseString;
+//    var http = require('http');
     var options = {
         host: server_data.smileIp,
         port: 80,
@@ -289,9 +291,7 @@ function initDevice(device_data) {
 
   function startPolling(device_data){     //start polling device for readings every 10 seconds
     intervalId[device_data.id] = setInterval(function () {
-      checkProduction(devices[device_data.id], function(response){
-          //reserved for callback
-        })
+      checkProduction(devices[device_data.id])
       }, 10000);
   }
 
@@ -302,8 +302,8 @@ function checkProduction(device_data, callback) {
 
 // Homey.log("checking production for "+device_data)
 
-  var parseString = require('xml2js').parseString;
-  var http = require('http');
+//  var parseString = require('xml2js').parseString;
+//  var http = require('http');
   var options = {
       host: device_data.smileIp,
       port: 80,
@@ -323,25 +323,28 @@ function checkProduction(device_data, callback) {
           parseString(body, function (err, result) {
 
             if (result != undefined) {      // check if json data exists
-              if (result.modules.module[0].services[0]!=undefined) {     // check if json data has correct structure
-                Homey.log('New smile data received');
-                module.exports.setAvailable(devices[device_data.id].homey_device);
-                device_data.readings=result;
-                storeNewReadings(device_data);
-                callback(); // no need for callback I think.....
-                return;
+              if (result.modules!=undefined) {
+                if (result.modules.module[0]!=undefined) {
+                  if (result.modules.module[0].services[0]!=undefined) {
+                    Homey.log('New smile data received');
+                    module.exports.setAvailable(devices[device_data.id].homey_device);
+                    device_data.readings=result;
+                    storeNewReadings(device_data);
+                    return;
+                  }
+                }
               }
             }
             Homey.log('Error reading smile');
             module.exports.setUnavailable(devices[device_data.id].homey_device, err );
           })
-    })
+      })
 
-  }).on('error', function(err) {
-        Homey.log("Got error: " + err.message);
-        Homey.log('Error reading smile');
-        module.exports.setUnavailable(devices[device_data.id].homey_device, err.message);
-      });
+      }).on('error', function(err) {
+            Homey.log("Got error: " + err.message);
+            Homey.log('Error reading smile');
+            module.exports.setUnavailable(devices[device_data.id].homey_device, err.message);
+          });
 }
 
 
@@ -357,6 +360,19 @@ function storeNewReadings ( device_data ) {
   };
   if (device_data.readings.modules == undefined){
     return
+  };
+  if (device_data.readings.modules.module[0] == undefined){
+    return
+  };
+  if (device_data.readings.modules.module[0].services[0] == undefined){
+    return
+  };
+
+  //trying to get rid of 'cannot read property' errors
+  function getValue ( property ) {
+    if (property != undefined) {
+      return property
+    }
   };
 
 // mapping unknown data structure caused by different smart meter brands
@@ -377,9 +393,9 @@ function storeNewReadings ( device_data ) {
     var gas_interval_meter         = mapMeter('gas_interval_meter');
     var gas_cumulative_meter       = mapMeter('gas_cumulative_meter');
 
-    var gasinterval_timestamp = gas_interval_meter[0].measurement[0].$.log_date; //electricity_interval_meter timestamp (1h)
-    var measure_gas = Number(gas_interval_meter[0].measurement[0]._) ; //gas_interval_meter (1h)
-    var meter_gas = Number(gas_cumulative_meter[0].measurement[0]._); //gas_cumulative_meter
+    var gasinterval_timestamp = getValue(gas_interval_meter[0].measurement[0].$.log_date); //electricity_interval_meter timestamp (1h)
+    var measure_gas = Number(getValue(gas_interval_meter[0].measurement[0]._)) ; //gas_interval_meter (1h)
+    var meter_gas = Number(getValue(gas_cumulative_meter[0].measurement[0]._)); //gas_cumulative_meter
   } else {
     //Homey.log("no gasmeter present");
     var gasinterval_timestamp = "";
@@ -392,19 +408,19 @@ function storeNewReadings ( device_data ) {
   var electricity_point_meter      = mapMeter('electricity_point_meter');
   var electricity_interval_meter   = mapMeter('electricity_interval_meter');
 
-  var electricity_point_meter_produced = Number(electricity_point_meter[0].measurement[0]._); //electricity_point_meter_produced
-  var electricity_point_meter_consumed = Number(electricity_point_meter[0].measurement[1]._); //electricity_point_meter_consumed
+  var electricity_point_meter_produced = Number(getValue(electricity_point_meter[0].measurement[0]._)); //electricity_point_meter_produced
+  var electricity_point_meter_consumed = Number(getValue(electricity_point_meter[0].measurement[1]._)); //electricity_point_meter_consumed
 
-  var electricity_interval_meter_offpeak_produced = Number(electricity_interval_meter[0].measurement[0]._); //electricity_interval_meter_offpeak_produced (5min)
-  var electricity_interval_meter_peak_produced = Number(electricity_interval_meter[0].measurement[1]._); //electricity_interval_meter_peak_produced (5min)
-  var electricity_interval_meter_offpeak_consumed = Number(electricity_interval_meter[0].measurement[2]._); //electricity_interval_meter_offpeak_consumed (5min)
-  var electricity_interval_meter_peak_consumed = Number(electricity_interval_meter[0].measurement[3]._); //electricity_interval_meter_peak_consumed (5min)
-  var interval_timestamp = electricity_cumulative_meter[0].measurement[0].$.log_date; //electricity_interval_meter timestamp (5min)
+  var electricity_interval_meter_offpeak_produced = Number(getValue(electricity_interval_meter[0].measurement[0]._)); //electricity_interval_meter_offpeak_produced (5min)
+  var electricity_interval_meter_peak_produced = Number(getValue(electricity_interval_meter[0].measurement[1]._)); //electricity_interval_meter_peak_produced (5min)
+  var electricity_interval_meter_offpeak_consumed = Number(getValue(electricity_interval_meter[0].measurement[2]._)); //electricity_interval_meter_offpeak_consumed (5min)
+  var electricity_interval_meter_peak_consumed = Number(getValue(electricity_interval_meter[0].measurement[3]._)); //electricity_interval_meter_peak_consumed (5min)
+  var interval_timestamp = getValue(electricity_cumulative_meter[0].measurement[0].$.log_date); //electricity_interval_meter timestamp (5min)
 
-  var electricity_cumulative_meter_offpeak_produced = Number(electricity_cumulative_meter[0].measurement[0]._)/1000 ; //electricity_cumulative_meter_offpeak_produced
-  var electricity_cumulative_meter_peak_produced = Number(electricity_cumulative_meter[0].measurement[1]._)/1000 ; //electricity_cumulative_meter_peak_produced
-  var electricity_cumulative_meter_offpeak_consumed = Number(electricity_cumulative_meter[0].measurement[2]._)/1000 ; //electricity_cumulative_meter_offpeak_consumed
-  var electricity_cumulative_meter_peak_consumed = Number(electricity_cumulative_meter[0].measurement[3]._)/1000 ; //electricity_cumulative_meter_peak_consumed
+  var electricity_cumulative_meter_offpeak_produced = Number(getValue(electricity_cumulative_meter[0].measurement[0]._))/1000 ; //electricity_cumulative_meter_offpeak_produced
+  var electricity_cumulative_meter_peak_produced = Number(getValue(electricity_cumulative_meter[0].measurement[1]._))/1000 ; //electricity_cumulative_meter_peak_produced
+  var electricity_cumulative_meter_offpeak_consumed = Number(getValue(electricity_cumulative_meter[0].measurement[2]._))/1000 ; //electricity_cumulative_meter_offpeak_consumed
+  var electricity_cumulative_meter_peak_consumed = Number(getValue(electricity_cumulative_meter[0].measurement[3]._))/1000 ; //electricity_cumulative_meter_peak_consumed
 
 //constructed readings
   var meter_power = (electricity_cumulative_meter_offpeak_consumed + electricity_cumulative_meter_peak_consumed - electricity_cumulative_meter_offpeak_produced - electricity_cumulative_meter_peak_produced);

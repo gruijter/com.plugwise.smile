@@ -10,8 +10,8 @@
     "nl": "Leest data van de Plugwise Smile P1 energie meter"
   },
 
-  "version": "0.9.16",
-  "compatibility": ">=0.10.0 || 1.x",
+  "version": "1.0.0",
+  "compatibility": ">= 1.x",
   "author": {
     "name": "Gruijter",
     "email": "gruijter@hotmail.com"

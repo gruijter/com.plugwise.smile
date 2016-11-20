@@ -34,6 +34,7 @@ the forum.
 Version changelog
 
 ```
+v1.0.0  2016.11.20 Stable release for Homey v1.0. Update xml2js to 0.4.17
 v0.9.16 2016.11.07 Compatibility 0.10.9. Breaking fw change:Device must be
         deleted and paired again. Fix 'cannot read property' crash. Improved gas
         usage logging in insights.
