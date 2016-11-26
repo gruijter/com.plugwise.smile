@@ -2,10 +2,10 @@
 
 Homey.log("entering driver.js");
 
-var parseString = require('xml2js').parseString;
-var http = require('http');
-var util = require('util');
-var ledring = require("../../ledring.js");
+const parseString = require('xml2js').parseString;
+const http = require('http');
+const util = require('util');
+const ledring = require("../../ledring.js");
 var devices = {};
 var intervalId = {};
 
@@ -14,7 +14,7 @@ module.exports.init = function(devices_data, callback) {
     devices_data.forEach(initDevice);
 
     Homey.manager('flow').on('condition.offPeak', function( callback, args ){
-      var result = devices[args.Smile.id].last_offPeak;
+      let result = devices[args.Smile.id].last_offPeak;
       Homey.log("condition flow requested, offPeak is: "+result);
       callback( null, result );
     });
@@ -115,7 +115,7 @@ module.exports.settings = function(device_data, newSettingsObj, oldSettingsObj, 
 module.exports.capabilities = {
     measure_power: {
       get: function(device_data, callback) {
-        var device = devices[device_data.id];
+        let device = devices[device_data.id];
         if (device==undefined){
           //callback(null, 0);
           return;
@@ -126,7 +126,7 @@ module.exports.capabilities = {
 
     meter_offPeak: {
       get: function(device_data, callback) {
-        var device = devices[device_data.id];
+        let device = devices[device_data.id];
         if (device==undefined){
           callback();//null, false);
           return;
@@ -137,7 +137,7 @@ module.exports.capabilities = {
 
     measure_gas: {
       get: function(device_data, callback) {
-        var device = devices[device_data.id];
+        let device = devices[device_data.id];
         if (device==undefined){
           callback();//null, 0);
           return;
@@ -148,7 +148,7 @@ module.exports.capabilities = {
 
     meter_gas: {
       get: function(device_data, callback) {
-        var device = devices[device_data.id];
+        let device = devices[device_data.id];
         if (device==undefined){
           callback();//null, 0);
           return;
@@ -159,53 +159,67 @@ module.exports.capabilities = {
 
     meter_power: {
       get: function(device_data, callback) {
-        var device = devices[device_data.id];
+        let device = devices[device_data.id];
         if (device==undefined){
           callback();//null, 0);
           return;
         };
         callback(null, device.last_meter_power);
       }
-    }
-/*
-    ,
+    },
+
+
     "meter_power.peak": {
       get: function(device_data, callback) {
-        var device = devices[device_data.id];
+        let device = devices[device_data.id];
+        if (device==undefined){
+          callback();//null, 0);
+          return;
+        };
         callback(null, device.last_meter_power_peak);
       }
     },
 
     "meter_power.offPeak": {
       get: function(device_data, callback) {
-        var device = devices[device_data.id];
+        let device = devices[device_data.id];
+        if (device==undefined){
+          callback();//null, 0);
+          return;
+        };
         callback(null, device.last_meter_power_offpeak);
       }
     },
 
     "meter_power.producedPeak": {
       get: function(device_data, callback) {
-        var device = devices[device_data.id];
+        let device = devices[device_data.id];
+        if (device==undefined){
+          callback();//null, 0);
+          return;
+        };
         callback(null, device.last_meter_power_peak_produced);
       }
     },
 
     "meter_power.producedOffPeak": {
       get: function(device_data, callback) {
-        var device = devices[device_data.id];
+        let device = devices[device_data.id];
+        if (device==undefined){
+          callback();//null, 0);
+          return;
+        };
         callback(null, device.last_meter_power_offpeak_produced);
       }
     }
-*/
+
 
 };
 
 function validateConnection(server_data, callback) {  // Validate Smile connection data
     Homey.log('Validating', server_data);
 
-//    var parseString = require('xml2js').parseString;
-//    var http = require('http');
-    var options = {
+    let options = {
         host: server_data.smileIp,
         port: 80,
         path: '/core/modules',
@@ -213,7 +227,7 @@ function validateConnection(server_data, callback) {  // Validate Smile connecti
         };
 
     http.get(options, function(res){
-        var body = "";
+        let body = "";
         res.on('data', function(data) {
             body += data;
         });
@@ -246,8 +260,6 @@ function validateConnection(server_data, callback) {  // Validate Smile connecti
 function initDevice(device_data) {
 
   Homey.log("entering initDevice");
-//  Homey.log(util.inspect(device_data));
-//  Homey.log(JSON.stringify(device_data, false, 4));
 
   //initDevice: retrieve device settings, buildDevice and start polling it
   Homey.log("getting settings");
@@ -302,9 +314,7 @@ function checkProduction(device_data, callback) {
 
 // Homey.log("checking production for "+device_data)
 
-//  var parseString = require('xml2js').parseString;
-//  var http = require('http');
-  var options = {
+  let options = {
       host: device_data.smileIp,
       port: 80,
       path: '/core/modules',
@@ -312,7 +322,7 @@ function checkProduction(device_data, callback) {
       };
 
   http.get(options, function(res){
-      var body = "";
+      let body = "";
       res.on('data', function(data) {
           body += data;
       });
@@ -326,7 +336,7 @@ function checkProduction(device_data, callback) {
               if (result.modules!=undefined) {
                 if (result.modules.module[0]!=undefined) {
                   if (result.modules.module[0].services[0]!=undefined) {
-                    Homey.log('New smile data received');
+//                    Homey.log('New smile data received');
                     module.exports.setAvailable(devices[device_data.id].homey_device);
                     device_data.readings=result;
                     storeNewReadings(device_data);
@@ -388,46 +398,43 @@ function storeNewReadings ( device_data ) {
   }
 
 // gas readings from device
+  let gasinterval_timestamp = "";
+  let measure_gas = 0;
+  let meter_gas = 0;
   if (device_data.readings.modules.module[1] != undefined) {            // check if second meter is present, otherwise no gasmeter
     //Homey.log("gasmeter present");
-    var gas_interval_meter         = mapMeter('gas_interval_meter');
-    var gas_cumulative_meter       = mapMeter('gas_cumulative_meter');
-
-    var gasinterval_timestamp = getValue(gas_interval_meter[0].measurement[0].$.log_date); //electricity_interval_meter timestamp (1h)
-    var measure_gas = Number(getValue(gas_interval_meter[0].measurement[0]._)) ; //gas_interval_meter (1h)
-    var meter_gas = Number(getValue(gas_cumulative_meter[0].measurement[0]._)); //gas_cumulative_meter
-  } else {
-    //Homey.log("no gasmeter present");
-    var gasinterval_timestamp = "";
-    var measure_gas = 0;
-    var meter_gas = 0;
+    let gas_interval_meter         = mapMeter('gas_interval_meter');
+    let gas_cumulative_meter       = mapMeter('gas_cumulative_meter');
+    gasinterval_timestamp = getValue(gas_interval_meter[0].measurement[0].$.log_date); //electricity_interval_meter timestamp (1h)
+    measure_gas = Number(getValue(gas_interval_meter[0].measurement[0]._)) ; //gas_interval_meter (1h)
+    meter_gas = Number(getValue(gas_cumulative_meter[0].measurement[0]._)); //gas_cumulative_meter
   }
 
 // electricity readings from device
-  var electricity_cumulative_meter = mapMeter('electricity_cumulative_meter');
-  var electricity_point_meter      = mapMeter('electricity_point_meter');
-  var electricity_interval_meter   = mapMeter('electricity_interval_meter');
+  let electricity_cumulative_meter = mapMeter('electricity_cumulative_meter');
+  let electricity_point_meter      = mapMeter('electricity_point_meter');
+  let electricity_interval_meter   = mapMeter('electricity_interval_meter');
 
-  var electricity_point_meter_produced = Number(getValue(electricity_point_meter[0].measurement[0]._)); //electricity_point_meter_produced
-  var electricity_point_meter_consumed = Number(getValue(electricity_point_meter[0].measurement[1]._)); //electricity_point_meter_consumed
+  let electricity_point_meter_produced = Number(getValue(electricity_point_meter[0].measurement[0]._)); //electricity_point_meter_produced
+  let electricity_point_meter_consumed = Number(getValue(electricity_point_meter[0].measurement[1]._)); //electricity_point_meter_consumed
 
-  var electricity_interval_meter_offpeak_produced = Number(getValue(electricity_interval_meter[0].measurement[0]._)); //electricity_interval_meter_offpeak_produced (5min)
-  var electricity_interval_meter_peak_produced = Number(getValue(electricity_interval_meter[0].measurement[1]._)); //electricity_interval_meter_peak_produced (5min)
-  var electricity_interval_meter_offpeak_consumed = Number(getValue(electricity_interval_meter[0].measurement[2]._)); //electricity_interval_meter_offpeak_consumed (5min)
-  var electricity_interval_meter_peak_consumed = Number(getValue(electricity_interval_meter[0].measurement[3]._)); //electricity_interval_meter_peak_consumed (5min)
-  var interval_timestamp = getValue(electricity_cumulative_meter[0].measurement[0].$.log_date); //electricity_interval_meter timestamp (5min)
+  let electricity_interval_meter_offpeak_produced = Number(getValue(electricity_interval_meter[0].measurement[0]._)); //electricity_interval_meter_offpeak_produced (5min)
+  let electricity_interval_meter_peak_produced = Number(getValue(electricity_interval_meter[0].measurement[1]._)); //electricity_interval_meter_peak_produced (5min)
+  let electricity_interval_meter_offpeak_consumed = Number(getValue(electricity_interval_meter[0].measurement[2]._)); //electricity_interval_meter_offpeak_consumed (5min)
+  let electricity_interval_meter_peak_consumed = Number(getValue(electricity_interval_meter[0].measurement[3]._)); //electricity_interval_meter_peak_consumed (5min)
+  let interval_timestamp = getValue(electricity_cumulative_meter[0].measurement[0].$.log_date); //electricity_interval_meter timestamp (5min)
 
-  var electricity_cumulative_meter_offpeak_produced = Number(getValue(electricity_cumulative_meter[0].measurement[0]._))/1000 ; //electricity_cumulative_meter_offpeak_produced
-  var electricity_cumulative_meter_peak_produced = Number(getValue(electricity_cumulative_meter[0].measurement[1]._))/1000 ; //electricity_cumulative_meter_peak_produced
-  var electricity_cumulative_meter_offpeak_consumed = Number(getValue(electricity_cumulative_meter[0].measurement[2]._))/1000 ; //electricity_cumulative_meter_offpeak_consumed
-  var electricity_cumulative_meter_peak_consumed = Number(getValue(electricity_cumulative_meter[0].measurement[3]._))/1000 ; //electricity_cumulative_meter_peak_consumed
+  let electricity_cumulative_meter_offpeak_produced = Number(getValue(electricity_cumulative_meter[0].measurement[0]._))/1000 ; //electricity_cumulative_meter_offpeak_produced
+  let electricity_cumulative_meter_peak_produced = Number(getValue(electricity_cumulative_meter[0].measurement[1]._))/1000 ; //electricity_cumulative_meter_peak_produced
+  let electricity_cumulative_meter_offpeak_consumed = Number(getValue(electricity_cumulative_meter[0].measurement[2]._))/1000 ; //electricity_cumulative_meter_offpeak_consumed
+  let electricity_cumulative_meter_peak_consumed = Number(getValue(electricity_cumulative_meter[0].measurement[3]._))/1000 ; //electricity_cumulative_meter_peak_consumed
 
 //constructed readings
-  var meter_power = (electricity_cumulative_meter_offpeak_consumed + electricity_cumulative_meter_peak_consumed - electricity_cumulative_meter_offpeak_produced - electricity_cumulative_meter_peak_produced);
-  var measure_power = (electricity_point_meter_consumed - electricity_point_meter_produced);
-  var measure_power_produced = device_data.last_measure_power_produced;
-  var measure_power_delta = measure_power - device_data.last_measure_power;
-  var offPeak = (electricity_interval_meter_offpeak_produced>0 || electricity_interval_meter_offpeak_consumed>0 );
+  let meter_power = (electricity_cumulative_meter_offpeak_consumed + electricity_cumulative_meter_peak_consumed - electricity_cumulative_meter_offpeak_produced - electricity_cumulative_meter_peak_produced);
+  let measure_power = (electricity_point_meter_consumed - electricity_point_meter_produced);
+  let measure_power_produced = device_data.last_measure_power_produced;
+  let measure_power_delta = measure_power - device_data.last_measure_power;
+  let offPeak = (electricity_interval_meter_offpeak_produced>0 || electricity_interval_meter_offpeak_consumed>0 );
 
   //correct measure_power for weird meter readings during production period with short peak in power use
 //  if (measure_power<=40 && device_data.last_measure_power_produced>100) {
@@ -478,7 +485,19 @@ function storeNewReadings ( device_data ) {
 //  Homey.log(meter_power);
   if (meter_power != device_data.last_meter_power) {
     module.exports.realtime(devices[device_data.id].homey_device, "meter_power", meter_power)
-  }
+  };
+  if (electricity_cumulative_meter_peak_consumed != device_data.last_meter_power_peak) {
+    module.exports.realtime(devices[device_data.id].homey_device, "meter_power.peak", electricity_cumulative_meter_peak_consumed)
+  };
+  if (electricity_cumulative_meter_offpeak_consumed != device_data.last_meter_power_offpeak) {
+    module.exports.realtime(devices[device_data.id].homey_device, "meter_power.offPeak", electricity_cumulative_meter_offpeak_consumed)
+  };
+  if (electricity_cumulative_meter_peak_produced != device_data.last_meter_power_peak_produced) {
+    module.exports.realtime(devices[device_data.id].homey_device, "meter_power.producedPeak", electricity_cumulative_meter_peak_produced)
+  };
+  if (electricity_cumulative_meter_offpeak_produced != device_data.last_meter_power_offpeak_produced) {
+    module.exports.realtime(devices[device_data.id].homey_device, "meter_power.producedOffPeak", electricity_cumulative_meter_offpeak_produced)
+  };
 //  Homey.log(meter_gas);
   if (meter_gas != device_data.last_meter_gas) {
     module.exports.realtime(devices[device_data.id].homey_device, "meter_gas", meter_gas);

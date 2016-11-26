@@ -22,7 +22,7 @@
     "small": "./assets/images/small.jpg"
   },
 
-  "category": ["tools","climate"],
+  "category": ["tools","climate","energy"],
 
   "capabilities": {
     "meter_offPeak": {
@@ -74,7 +74,11 @@
         "meter_offPeak",
         "measure_gas",
         "meter_gas",
-        "meter_power"
+        "meter_power",
+        "meter_power.peak",
+        "meter_power.offPeak",
+        "meter_power.producedPeak",
+        "meter_power.producedOffPeak"
       ],
 
       "mobile": {
@@ -90,7 +94,11 @@
               "meter_offPeak",
               "measure_gas",
               "meter_gas",
-              "meter_power"
+              "meter_power",
+              "meter_power.peak",
+              "meter_power.offPeak",
+              "meter_power.producedPeak",
+              "meter_power.producedOffPeak"
             ],
             "options": {
               "icons": {

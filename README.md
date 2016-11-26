@@ -5,7 +5,9 @@ IP is used, so there is no need for the Plugwise Stretch.
 
 The app logs and provides flow cards for the following data:
 - Actual power usage/production (W, 10s interval for usage, 5 min for production)
-- Totalized power meter (Wh, 5 min updates)
+- Totalized power meter (kWh, 5 min updates)
+- All individual power meters (kWh, 5 min updates)
+- Recent gas usage (m3, of the previous hour)
 - Gas meter (m3, 1 hour updates)
 - Tariff change (off-peak, true or false)
 
@@ -21,8 +23,6 @@ Only changed values are logged.
 To setup go to "Devices" and enter the IP-address and Smile ID. The ID can be
 found printed on the device, or can be found in the original app from Plugwise.
 
-When using insights please select 'stepline' to get the correct visual display.
-
 ##### Donate: #####
 If you like the app you can show your appreciation by posting it in the [forum],
 and if you really like it you can donate. Feature requests can also be placed on
@@ -34,12 +34,13 @@ the forum.
 Version changelog
 
 ```
-v1.0.0  2016.11.20 Stable release for Homey v1.0. Update xml2js to 0.4.17
-v0.9.16 2016.11.07 Compatibility 0.10.9. Breaking fw change:Device must be
+v1.0.0  2016.11.26 Stable release for Homey v1.0. Update xml2js to 0.4.17. Added
+        all individual power meter readings (re-pair is required to use)
+v0.9.16 2016.11.07 Compatibility 0.10.9. Breaking fw change: Device must be
         deleted and paired again. Fix 'cannot read property' crash. Improved gas
         usage logging in insights.
 v0.9.15 2016.10.18 Removing 0 readings after app restart
-v0.9.14 2016.10.01 Compatibility 0.10.1+. Breaking fw change:Device must be
+v0.9.14 2016.10.01 Compatibility 0.10.1+. Breaking fw change: Device must be
         deleted and paired again. offPeak and gas usage can now corectly logged
         in Insights (Thank you Athom!). Fix for occasional crash.
 v0.9.13 2016.08.27 Compatibility 0.9.3+
