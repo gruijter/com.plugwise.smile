@@ -10,7 +10,7 @@
     "nl": "Leest data van de Plugwise Smile P1 energie meter"
   },
 
-  "version": "1.0.0",
+  "version": "1.0.1",
   "compatibility": ">= 1.x",
   "author": {
     "name": "Gruijter",
@@ -80,6 +80,32 @@
         "meter_power.producedPeak",
         "meter_power.producedOffPeak"
       ],
+      "capabilitiesOptions": {
+  			"meter_power.peak": {
+  				"title": {
+  					"en": "Power meter peak",
+  					"nl": "Stroommeter piek"
+  				}
+        },
+        "meter_power.offPeak": {
+          "title": {
+            "en": "Power meter off-peak",
+            "nl": "Stroommeter dal"
+          }
+        },
+        "meter_power.producedPeak": {
+          "title": {
+            "en": "Production peak",
+            "nl": "Productie piek"
+          }
+        },
+        "meter_power.producedOffPeak": {
+          "title": {
+            "en": "Production off-peak",
+            "nl": "Productie dal"
+          }
+        }
+      },
 
       "mobile": {
         "components": [
