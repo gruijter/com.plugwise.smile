@@ -34,8 +34,8 @@ the forum.
 Version changelog
 
 ```
-v1.0.1  2016.11.27 ***WIP*** more robust for corrupt smile data. Changed titles
-        of individual meters in Insights and device card.
+v1.1.0  2016.12.02 More robust for corrupt smile data. Changed titles of
+        individual power meters in Insights and device card.
 v1.0.0  2016.11.26 Stable release for Homey v1.0. Update xml2js to 0.4.17. Added
         all individual power meter readings (re-pair is required to use)
 v0.9.16 2016.11.07 Compatibility 0.10.9. Breaking fw change: Device must be

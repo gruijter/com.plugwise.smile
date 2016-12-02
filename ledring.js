@@ -51,7 +51,7 @@ Homey.log("ledring.js started");
 
 module.exports.change = function (device_data, measure_power, callback) {
 
-  Homey.log("entering ledring change");
+  //Homey.log("entering ledring change");
 
   if (measure_power>=0) {     // consuming power makes ledring red
 

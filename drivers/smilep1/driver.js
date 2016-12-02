@@ -236,13 +236,11 @@ function validateConnection(server_data, callback) {  // Validate Smile connecti
             Homey.log(body);
 
             parseString(body, function (err, result) {
-              //Homey.log(result); // check if xml/json data exists
-              if (result != undefined) {
-                if (result.modules.module[0].services[0] != undefined) {
-                  Homey.log('Connecting successful!');
-                  callback(null, result);
-                  return;
-                }
+              //Homey.log(result);
+              if (safeRead(result, 'modules.module.0.services.0') != undefined){   // check if json data exists
+                Homey.log('Connecting successful!');
+                callback(null, result);
+                return;
               }
               Homey.log('Error during connecting');
               callback(res.statusCode, null);
@@ -309,11 +307,13 @@ function initDevice(device_data) {
 
 }//end of initDevice
 
+//function to safely get property without risk of "Cannot read property"
+function safeRead (instance, path) {
+  return path.split('.').reduce((p, c) => p ? p[c] : undefined,instance);
+};
 
 function checkProduction(device_data, callback) {
-
 // Homey.log("checking production for "+device_data)
-
   let options = {
       host: device_data.smileIp,
       port: 80,
@@ -331,19 +331,13 @@ function checkProduction(device_data, callback) {
           //Homey.log(body);
 
           parseString(body, function (err, result) {
-
-            if (result != undefined) {      // check if json data exists
-              if (result.modules!=undefined) {
-                if (result.modules.module[0]!=undefined) {
-                  if (result.modules.module[0].services[0]!=undefined) {
-//                    Homey.log('New smile data received');
-                    module.exports.setAvailable(devices[device_data.id].homey_device);
-                    device_data.readings=result;
-                    handleNewReadings(device_data);
-                    return;
-                  }
-                }
-              }
+            //app is initializing or data is corrupt
+            if (safeRead(result, 'modules.module.0.services.0') != undefined){   // check if json data exists
+              //Homey.log('New smile data received');
+              module.exports.setAvailable(devices[device_data.id].homey_device);
+              device_data.readings=result;
+              handleNewReadings(device_data);
+              return;
             }
             Homey.log('Error reading smile');
             module.exports.setUnavailable(devices[device_data.id].homey_device, err );
@@ -361,31 +355,14 @@ function checkProduction(device_data, callback) {
 function handleNewReadings ( device_data ) {
   //Homey.log("storing new readings");
 
-  //app is initializing
-  if (device_data == undefined){
-    return
-  };
-  if (device_data.readings == undefined){
-    return
-  };
-  if (device_data.readings.modules == undefined){
-    return
-  };
-  if (device_data.readings.modules.module[0] == undefined){
-    return
-  };
-  if (device_data.readings.modules.module[0].services[0] == undefined){
+  //app is initializing or data is corrupt
+  if (safeRead(device_data, 'readings.modules.module.0.services.0') == undefined){
     return
   };
 
-// flatten and combine gas and electricity meters
-  let meter1 = device_data.readings.modules.module[0].services[0];
-  let meter2;
-  if (device_data.readings.modules.module[1] != undefined) {            // check if second meter is present, otherwise no gasmeter
-    if (device_data.readings.modules.module[1].services[0] != undefined) {
-      meter2 = device_data.readings.modules.module[1].services[0]
-    }
-  };
+// flatten a bit, and combine gas and electricity meters
+  let meter1 = safeRead(device_data, 'readings.modules.module.0.services.0');
+  let meter2 = safeRead(device_data, 'readings.modules.module.1.services.0');
   let meter = Object.assign(meter1, meter2);
   //Homey.log(util.inspect(meter, true, 10, true));
 
@@ -407,58 +384,22 @@ function handleNewReadings ( device_data ) {
   let measure_power_produced = device_data.last_measure_power_produced;
 
 // gas readings from device
-  if (meter.gas_interval_meter[0] != undefined) {
-    if (meter.gas_interval_meter[0].measurement[0] != undefined) {
-      gasinterval_timestamp = meter.gas_interval_meter[0].measurement[0].$.log_date; //gas_interval_meter timestamp (1h)
-      measure_gas = Number(meter.gas_interval_meter[0].measurement[0]._) ; //gas_interval_meter (1h)
-    }
-  };
-  if (meter.gas_cumulative_meter[0] != undefined) {
-    if (meter.gas_cumulative_meter[0].measurement[0] != undefined) {
-      meter_gas = Number(meter.gas_cumulative_meter[0].measurement[0]._); //gas_cumulative_meter
-    }
-  };
+  gasinterval_timestamp = safeRead(meter,'gas_interval_meter.0.measurement.0.$.log_date'); //gas_interval_meter timestamp (1h)
+  measure_gas = Number(safeRead(meter,'gas_interval_meter.0.measurement.0._')) ; //gas_interval_meter (1h)
+  meter_gas = Number(safeRead(meter,'gas_cumulative_meter.0.measurement.0._')); //gas_cumulative_meter
 
 // electricity readings from device
-  if (meter.electricity_point_meter[0] != undefined) {
-    if (meter.electricity_point_meter[0].measurement[0] != undefined) {
-      electricity_point_meter_produced = Number(meter.electricity_point_meter[0].measurement[0]._); //electricity_point_meter_produced
-    }
-    if (meter.electricity_point_meter[0].measurement[1] != undefined) {
-      electricity_point_meter_consumed = Number(meter.electricity_point_meter[0].measurement[1]._); //electricity_point_meter_consumed
-    }
-  };
-
-  if (meter.electricity_interval_meter[0] != undefined) {
-    if (meter.electricity_interval_meter[0].measurement[0] != undefined) {
-      electricity_interval_meter_offpeak_produced = Number(meter.electricity_interval_meter[0].measurement[0]._); //electricity_interval_meter_offpeak_produced (5min)
-    }
-    if (meter.electricity_interval_meter[0].measurement[1] != undefined) {
-      electricity_interval_meter_peak_produced = Number(meter.electricity_interval_meter[0].measurement[1]._); //electricity_interval_meter_peak_produced (5min)
-    }
-    if (meter.electricity_interval_meter[0].measurement[2] != undefined) {
-      electricity_interval_meter_offpeak_consumed = Number(meter.electricity_interval_meter[0].measurement[2]._); //electricity_interval_meter_offpeak_consumed (5min)
-    }
-    if (meter.electricity_interval_meter[0].measurement[3] != undefined) {
-      electricity_interval_meter_peak_consumed = Number(meter.electricity_interval_meter[0].measurement[3]._); //electricity_interval_meter_peak_consumed (5min)
-    }
-  };
-
-  if (meter.electricity_cumulative_meter[0] != undefined) {
-    if (meter.electricity_cumulative_meter[0].measurement[0] != undefined) {
-      interval_timestamp = meter.electricity_cumulative_meter[0].measurement[0].$.log_date; //electricity_interval_meter timestamp (5min)
-      electricity_cumulative_meter_offpeak_produced = Number(meter.electricity_cumulative_meter[0].measurement[0]._)/1000 ; //electricity_cumulative_meter_offpeak_produced
-    }
-    if (meter.electricity_cumulative_meter[0].measurement[1] != undefined) {
-      electricity_cumulative_meter_peak_produced = Number(meter.electricity_cumulative_meter[0].measurement[1]._)/1000 ; //electricity_cumulative_meter_peak_produced
-    }
-    if (meter.electricity_cumulative_meter[0].measurement[2] != undefined) {
-      electricity_cumulative_meter_offpeak_consumed = Number(meter.electricity_cumulative_meter[0].measurement[2]._)/1000 ; //electricity_cumulative_meter_offpeak_consumed
-    }
-    if (meter.electricity_cumulative_meter[0].measurement[3] != undefined) {
-      electricity_cumulative_meter_peak_consumed = Number(meter.electricity_cumulative_meter[0].measurement[3]._)/1000 ; //electricity_cumulative_meter_peak_consumed
-    }
-  };
+  electricity_point_meter_produced = Number(safeRead(meter,'electricity_point_meter.0.measurement.0._')); //electricity_point_meter_produced
+  electricity_point_meter_consumed = Number(safeRead(meter, 'electricity_point_meter.0.measurement.1._')); //electricity_point_meter_consumed
+  electricity_interval_meter_offpeak_produced = Number(safeRead(meter,'electricity_interval_meter.0.measurement.0._')); //electricity_interval_meter_offpeak_produced (5min)
+  electricity_interval_meter_peak_produced = Number(safeRead(meter,'electricity_interval_meter.0.measurement.1._')); //electricity_interval_meter_peak_produced (5min)
+  electricity_interval_meter_offpeak_consumed = Number(safeRead(meter,'electricity_interval_meter.0.measurement.2._')); //electricity_interval_meter_offpeak_consumed (5min)
+  electricity_interval_meter_peak_consumed = Number(safeRead(meter,'electricity_interval_meter.0.measurement.3._')); //electricity_interval_meter_peak_consumed (5min)
+  interval_timestamp = safeRead(meter,'electricity_cumulative_meter.0.measurement.0.$.log_date'); //electricity_interval_meter timestamp (5min)
+  electricity_cumulative_meter_offpeak_produced = Number(safeRead(meter,'electricity_cumulative_meter.0.measurement.0._'))/1000 ; //electricity_cumulative_meter_offpeak_produced
+  electricity_cumulative_meter_peak_produced = Number(safeRead(meter,'electricity_cumulative_meter.0.measurement.1._'))/1000 ; //electricity_cumulative_meter_peak_produced
+  electricity_cumulative_meter_offpeak_consumed = Number(safeRead(meter,'electricity_cumulative_meter.0.measurement.2._'))/1000 ; //electricity_cumulative_meter_offpeak_consumed
+  electricity_cumulative_meter_peak_consumed = Number(safeRead(meter,'electricity_cumulative_meter.0.measurement.3._'))/1000 ; //electricity_cumulative_meter_peak_consumed
 
 //constructed readings
   let meter_power = (electricity_cumulative_meter_offpeak_consumed + electricity_cumulative_meter_peak_consumed - electricity_cumulative_meter_offpeak_produced - electricity_cumulative_meter_peak_produced);
