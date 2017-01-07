@@ -10,7 +10,7 @@
     "nl": "Leest data van de Plugwise Smile P1 energie meter"
   },
 
-  "version": "1.1.0",
+  "version": "1.1.1",
   "compatibility": ">= 1.x",
   "author": {
     "name": "Gruijter",
@@ -229,10 +229,12 @@
         "tokens":[
           {
             "name":"tariff",
+            "type": "boolean",
             "title": {
               "en":"off-peak",
               "nl":"dal"
-            }
+            },
+            "example" : false
           }
         ]
       },
@@ -256,17 +258,21 @@
         "tokens":[
           {
             "name":"power",
+            "type": "number",
             "title": {
               "en":"Watt",
               "nl":"Watt"
-            }
+            },
+            "example" : 850
           },
           {
             "name":"power_delta",
+            "type": "number",
             "title": {
               "en":"+- W",
               "nl":"+- W"
-            }
+            },
+          "example" : 18
           }
         ]
       }

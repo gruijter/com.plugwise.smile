@@ -34,6 +34,7 @@ the forum.
 Version changelog
 
 ```
+V1.1.1  2017.01.07 Fix for flow tokens fw 1.1.2 
 v1.1.0  2016.12.02 More robust for corrupt smile data. Changed titles of
         individual power meters in Insights and device card.
 v1.0.0  2016.11.26 Stable release for Homey v1.0. Update xml2js to 0.4.17. Added
