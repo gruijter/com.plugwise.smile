@@ -10,7 +10,7 @@
     "nl": "Leest data van de Plugwise Smile P1 energie meter"
   },
 
-  "version": "1.1.1",
+  "version": "1.1.2",
   "compatibility": ">= 1.x",
   "author": {
     "name": "Gruijter",
@@ -180,6 +180,16 @@
                 "nl": "IP adres"
               },
               "value": "0.0.0.0"
+            },
+            {
+              "id": "pollingInterval",
+              "type": "number",
+              "label": {
+                "en": "Polling interval (seconds)",
+                "nl": "Polling interval (seconden)"
+              },
+              "attr": { "min": 10 },
+              "value": 10
             },
             {
               "id": "ledring_usage_limit",

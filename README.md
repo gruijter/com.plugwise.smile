@@ -25,8 +25,8 @@ found printed on the device, or can be found in the original app from Plugwise.
 
 ##### Donate: #####
 If you like the app you can show your appreciation by posting it in the [forum],
-and if you really like it you can donate. Feature requests can also be placed on
-the forum.
+and if you really like it you can buy me a beer. Feature requests can be placed
+on the [forum].
 
 [![Paypal donate][pp-donate-image]][pp-donate-link]
 ===============================================================================
@@ -34,7 +34,8 @@ the forum.
 Version changelog
 
 ```
-V1.1.1  2017.01.07 Fix for flow tokens fw 1.1.2 
+v1.1.2  2017.04.19 Added polling interval setting
+V1.1.1  2017.01.07 Fix for flow tokens fw 1.1.2
 v1.1.0  2016.12.02 More robust for corrupt smile data. Changed titles of
         individual power meters in Insights and device card.
 v1.0.0  2016.11.26 Stable release for Homey v1.0. Update xml2js to 0.4.17. Added
