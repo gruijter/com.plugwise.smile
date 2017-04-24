@@ -23,7 +23,7 @@
   },
 
   "category": ["tools","appliances", "energy"],
-
+  "gtin": ["8718469270064"],
   "capabilities": {
     "meter_offPeak": {
       "type": "boolean",
