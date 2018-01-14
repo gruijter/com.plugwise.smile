@@ -10,12 +10,20 @@
     "nl": "Leest data van de Plugwise Smile P1 energie meter"
   },
 
-  "version": "1.1.2",
-  "compatibility": ">= 1.x",
+  "version": "2.0.0",
+	"sdk": 2,
+  "compatibility": ">= 1.5",
   "author": {
-    "name": "Gruijter",
+    "name": "Robin Gruijter",
     "email": "gruijter@hotmail.com"
   },
+	"contributing": {
+		"donate": {
+			"paypal": {
+				"username": "gruijter"
+			}
+		}
+	},
 
   "images": {
     "large": "./assets/images/large.jpg",
@@ -156,14 +164,14 @@
         }
       ],
       "settings": [
-        {
-          "type": "group",
-          "label": {
-            "en": "Smile P1 settings",
-            "nl": "Smile P1 instellingen"
-          },
-          "children": [
-            {
+				{
+					"type": "group",
+					"label": {
+						"en": "Device information",
+						"nl": "Device informatie"
+					},
+					"children": [
+						{
               "id": "smileId",
               "type": "label",
               "label": {
@@ -171,13 +179,22 @@
                 "nl": "Smile ID"
               },
               "value": "bcdfghjk"
-            },
+            }
+					]
+				},
+        {
+          "type": "group",
+          "label": {
+						"en": "Connection",
+						"nl": "Verbinding"
+          },
+          "children": [
             {
               "id": "smileIp",
               "type": "text",
               "label": {
-                "en": "IP address",
-                "nl": "IP adres"
+								"en": "URL or IP address",
+                "nl": "URL of IP adres"
               },
               "value": "0.0.0.0"
             },
@@ -185,34 +202,43 @@
               "id": "pollingInterval",
               "type": "number",
               "label": {
-                "en": "Polling interval (seconds)",
-                "nl": "Polling interval (seconden)"
+								"en": "Polling interval (s)",
+                "nl": "Polling interval (s)"
               },
               "attr": { "min": 10 },
               "value": 10
-            },
-            {
-              "id": "ledring_usage_limit",
-              "type": "number",
-              "label": {
-                "en": "Ledring screensaver max power (W)",
-                "nl": "Ledring screensaver max gebruik (W)"
-              },
-              "attr": { "min": 0 },
-              "value": 3000
-            },
-            {
-              "id": "ledring_production_limit",
-              "type": "number",
-              "label": {
-                "en": "Ledring screensaver max production (W)",
-                "nl": "Ledring screensaver max productie (W)"
-              },
-              "attr": { "min": 0 },
-              "value": 3000
             }
-          ]
-        }
+					]
+				},
+				{
+					"type": "group",
+					"label": {
+						"en": "Ledring",
+						"nl": "Ledring"
+					},
+					"children": [
+						{
+							"id": "ledring_usage_limit",
+							"type": "number",
+							"label": {
+								"en": "Max consumption (W)",
+								"nl": "Max gebruik (W)"
+							},
+							"attr": { "min": 0 },
+							"value": 3000
+						},
+						{
+							"id": "ledring_production_limit",
+							"type": "number",
+							"label": {
+								"en": "Max production (W)",
+								"nl": "Max productie (W)"
+							},
+							"attr": { "min": 0 },
+							"value": 3000
+						}
+					]
+				}
       ]
     }
   ],
@@ -229,10 +255,10 @@
           {
             "name": "Smile",
             "type": "device",
-            "filter": "driver_uri=homey:app:com.plugwise.smile&driver_id=smilep1",
+            "filter": "driver_id=smilep1",
             "placeholder": {
-              "en": "Which Smile device",
-              "nl": "Welk Smile apparaat"
+              "en": "Which device",
+              "nl": "Welk apparaat"
              }
           }
         ],
@@ -258,10 +284,10 @@
           {
             "name": "Smile",
             "type": "device",
-            "filter": "driver_uri=homey:app:com.plugwise.smile&driver_id=smilep1",
+            "filter": "driver_id=smilep1",
             "placeholder": {
-              "en": "Which Smile device",
-              "nl": "Welk Smile apparaat"
+              "en": "Which device",
+              "nl": "Welk apparaat"
              }
           }
         ],
@@ -298,10 +324,10 @@
           {
             "name": "Smile",
             "type": "device",
-            "filter": "driver_uri=homey:app:com.plugwise.smile&driver_id=smilep1",
+            "filter": "driver_id=smilep1",
             "placeholder": {
-              "en": "Which Smile device",
-              "nl": "Welk Smile apparaat"
+              "en": "Which device",
+              "nl": "Welk apparaat"
              }
           }
         ]

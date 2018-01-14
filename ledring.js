@@ -1,107 +1,97 @@
-"use strict";
+'use strict';
 
-Homey.log("ledring.js started");
+const Homey = require('homey');
 
+class Ledring {
+	constructor() {
+		Homey.app.log('ledring.js started');
+		this.framesPower = [];
+		this.framePower = [];
 
-//module.exports.init = function() {         // smile_power animation init
+		// Init frame for every pixel...
+		for (let pixel = 0; pixel < 24; pixel += 1) {
+			if (pixel < 1) {
+				this.framePower.push({ r: 80,	g: 0,	b: 0 });
+			} else {
+				this.framePower.push({ r: 0, g: 80, b: 0 });
+			}
+		}
+		this.framesPower.push(this.framePower);
 
-  var Animation = Homey.manager('ledring').Animation;
+		this.myAnimation = new Homey.LedringAnimation({
+			options: {
+				fps: 1, 		// real frames per second
+				tfps: 60, 	// target frames per second. this means that every frame will be interpolated 60 times
+				rpm: 10,		// rotations per minute
+			},
+			frames: this.framesPower,
+		});
 
-  global.frames_smile_power = [];
-  global.frame_smile_power = [];
+		// register the animation with Homey
+		this.myAnimation
+			.on('start', () => {
+				// The animation has started playing
+			})
+			.on('stop', () => {
+				// The animation has stopped playing
+			})
+			.register()
+			.then(() => {
+				// Homey.app.log('Animation registered!');
+				// myAnimation.start();
+				// register the screensaver with Homey
+				this.myAnimation.registerScreensaver('smile_power')
+					.then(() => {
+						Homey.app.log('screensaver registered!');
+					})
+					.catch((error) => {
+						Homey.app.log(error);
+					});
+			})
+			.catch((error) => {
+				Homey.app.log(error);
+			});
+	}
 
-  // for every pixel...
-  for( var pixel = 0; pixel < 24; pixel++ ) {
-  	if( pixel < 1) {
-  		frame_smile_power.push({
-  			r: 255,	g: 0,	b: 0
-  		});
-  	} else {
-  		frame_smile_power.push({
-  			r: 0, g: 255, b: 0
-  		})
-  	}
-  }
-  frames_smile_power.push(frame_smile_power);
+	change(deviceSettings, measurepower) {
+		// Homey.app.log('entering ledring change');
+		let limit = ((24 * measurepower) / deviceSettings.ledring_usage_limit).toFixed(0);
+		if (measurepower >= 0) {	// consuming power makes ledring red
+			if (deviceSettings.ledring_usage_limit === 0) {	// ignore change when limit setting is 0
+				// Homey.app.log('ledring not changed');
+				return;
+			}
+			// Homey.app.log("limit is: "+limit);
+			if (limit > 24) { limit = 24; }
+			for (let pixel = 0; pixel < 24; pixel += 1) {
+				if (pixel < limit) {
+					this.framePower[pixel] = { r: 80,	g: 0,	b: 0	};
+				} else { this.framePower[pixel] = { r: 0, g: 80, b: 0 }; }
+			}
+			this.framesPower[0] = this.framePower;
+		} else {	// producing power makes ledring blue
+			if (deviceSettings.ledring_production_limit === 0) {	// ignore change when limit setting is 0
+				// Homey.app.log('ledring not changed');
+				return;
+			}
+			// Homey.app.log("limit is: " + limit);
+			limit = -limit;
+			if (limit > 24) { limit = 24; }
+			for (let pixel = 0; pixel < 24; pixel += 1) {
+				if (pixel < limit) {
+					this.framePower[pixel] = { r: 0,	g: 0,	b: 120 };
+				} else { this.framePower[pixel] = { r: 0, g: 80, b: 0 }; }
+			}
+			this.framesPower[0] = this.framePower;
+		}
+		this.myAnimation.updateFrames(this.framesPower)
+			.catch((error) => {
+				Homey.app.log(error);
+			});
+		// Homey.app.log('ledring changed');
+	}
 
-  var animation_smile_power = new Animation({
-
-      options: {
-          fps     : 1, 	// real frames per second
-          tfps    : 60, 	// target frames per second. this means that every frame will be interpolated 60 times
-          rpm     : 10,	// rotations per minute
-      },
-      frames    : frames_smile_power
-  })
-
-  animation_smile_power.register(function(err, result){
-  	Homey.manager('ledring').registerScreensaver('smile_power', animation_smile_power)
-  	if( err ) return Homey.error(err);
-    Homey.log("smile_power ledring animation is registered");
-  	animation_smile_power.on('screensaver_start', function( screensaver_id ){
-  //		Homey.log('Screensaver started');
-  	})
-  	animation_smile_power.on('screensaver_stop', function( screensaver_id ){
-//  		Homey.log('Screensaver stopped')
-  	})
-  })
-
-//}      // End smile_power animation init
-
-
-module.exports.change = function (device_data, measure_power, callback) {
-
-  //Homey.log("entering ledring change");
-
-  if (measure_power>=0) {     // consuming power makes ledring red
-
-    if (device_data.ledring_usage_limit==0) {  // ignore change when limit setting is 0
-      callback("ledring not changed");
-      return
-    }
-
-    var limit = (24 * measure_power / device_data.ledring_usage_limit).toFixed(0);
-    //Homey.log("limit is: "+limit);
-    if (limit > 24) { limit = 24};
-    for( var pixel = 0; pixel < 24; pixel++ ) {
-      if( pixel < limit) {
-        frame_smile_power[pixel]={
-          r: 80,	g: 0,	b: 0
-        };
-      } else {
-          frame_smile_power[pixel]={
-            r: 0, g: 80, b: 0
-          }
-        }
-      }
-    frames_smile_power[0]=frame_smile_power;
-  }
-
-  else {             // producing power makes ledring blue
-
-    if (device_data.ledring_production_limit==0) {  // ignore change when limit setting is 0
-      callback("ledring not changed");
-      return
-    };
-
-      var limit = -(24 * measure_power / device_data.ledring_production_limit).toFixed(0);
-      //Homey.log("limit is: "+limit);
-      if (limit > 24) { limit = 24};
-      for( var pixel = 0; pixel < 24; pixel++ ) {
-          if( pixel < limit) {
-            frame_smile_power[pixel]={
-              r: 0,	g: 0,	b: 120
-            };
-          } else {
-              frame_smile_power[pixel]={
-                r: 0, g: 80, b: 0
-              }
-            }
-        }
-      frames_smile_power[0]=frame_smile_power;
-    }
-
-  animation_smile_power.updateFrames(frames_smile_power);
-  callback("ledring changed");
 
 }
+
+module.exports = Ledring;

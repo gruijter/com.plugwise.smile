@@ -1,7 +1,18 @@
 {
-    "pair": {
-        "title": "Please enter your Smile IP address and ID:",
-        "sip": "IP address (0.0.0.0)",
-        "sid": "Smile ID (bcdfghjk)"
-      }
+	"pair": {
+		"title": "Add device",
+		"intro": "Enter the IP address and ID of the Smile P1.",
+		"host": "IP address",
+		"smileId": "Smile ID",
+		"required": "The IP address and SmileId are required",
+		"testSettings": "Save",
+		"success": "Success!"
+	},
+	"settings": {
+		"app": {
+			"title": "Plugwise Smile P1 Debug Logs",
+			"logs": "Logs",
+			"getlogs": "Refresh logs"
+		}
+	}
 }
