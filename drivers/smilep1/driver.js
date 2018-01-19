@@ -15,7 +15,7 @@ class SmileP1Driver extends Homey.Driver {
 			try {
 				this.log('save button pressed in frontend');
 				const smile = new this.Smile(data.smileId, data.smileIp);
-				this.log(smile);
+				// this.log(smile);
 				// try to get status
 				await smile.getMeter()
 					.then(() => {
@@ -92,7 +92,7 @@ class SmileP1Driver extends Homey.Driver {
 			this.tariffChangedTrigger
 				.trigger(this, tokens)
 				.catch(this.error);
-			// .then(this.log('Tariff change flow card triggered'));
+			// .then(this.error('Tariff change flow card triggered'));
 		}
 		if (measurePower !== this.meters.lastMeasurePower) {
 			const tokens = {
@@ -102,7 +102,7 @@ class SmileP1Driver extends Homey.Driver {
 			this.powerChangedTrigger
 				.trigger(this, tokens)
 				.catch(this.error);
-			// .then(this.log('Power change flow card triggered'));
+			// .then(this.error('Power change flow card triggered'));
 			// update the ledring screensavers
 			this._ledring.change(this.getSettings(), this.meters.lastMeasurePower);
 		}
