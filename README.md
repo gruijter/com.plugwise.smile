@@ -34,6 +34,7 @@ on the [forum].
 Version changelog
 
 ```
+v2.0.2	2018.01.29 Minor fix.
 v2.0.1	2018.01.19 Minor fixes. Stable release.
 v2.0.0	2018.01.14 Complete rewrite to sdk2.
 v1.1.2  2017.04.19 Added polling interval setting
