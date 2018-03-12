@@ -34,6 +34,7 @@ on the [forum].
 Version changelog
 
 ```
+v2.0.3	2018.03.12 License info extended.
 v2.0.2	2018.01.29 Minor fix.
 v2.0.1	2018.01.19 Minor fixes. Stable release.
 v2.0.0	2018.01.14 Complete rewrite to sdk2.
