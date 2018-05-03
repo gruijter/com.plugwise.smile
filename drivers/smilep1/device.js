@@ -89,7 +89,7 @@ class SmileP1Device extends Homey.Device {
 	onSettings(oldSettingsObj, newSettingsObj, changedKeysArr, callback) {
 		this.log('settings change requested by user');
 		this.log(newSettingsObj);
-		this.smile.getMeter(newSettingsObj.smileIp, newSettingsObj.smileIp)
+		this.smile.getMeter(newSettingsObj.smileId, newSettingsObj.smileIp)
 			.then(() => {		// new settings are correct
 				this.log(`${this.getName()} device settings changed`);
 				// do callback to confirm settings change
@@ -98,7 +98,7 @@ class SmileP1Device extends Homey.Device {
 			})
 			.catch((error) => {		// new settings are incorrect
 				this.error(error.message);
-				this.smile.getMeter(oldSettingsObj.smileIp, oldSettingsObj.smileIp);
+				this.smile.getMeter(oldSettingsObj.smileId, oldSettingsObj.smileIp);
 				return callback(error);
 			});
 	}
