@@ -14,7 +14,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+along with com.plugwise.smile.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 'use strict';
@@ -45,10 +45,7 @@ class SmileP1Device extends Homey.Device {
 			// register condition flow cards
 			const offPeakCondition = new Homey.FlowCardCondition('offPeak');
 			offPeakCondition.register()
-				.registerRunListener((args, state) => {
-					// this.log('offPeak condition flow card requested');
-					return Promise.resolve(this.meters.lastOffpeak);
-				});
+				.registerRunListener(() => Promise.resolve(this.meters.lastOffpeak)); // this.log('offPeak condition flow card requested');
 			// start polling device for info
 			this.intervalIdDevicePoll = setInterval(() => {
 				try {

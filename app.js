@@ -14,7 +14,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+along with com.plugwise.smile.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 'use strict';
@@ -59,9 +59,9 @@ class MyApp extends Homey.App {
 		try {
 			// get the meter values
 			const meter = await this.smile.getMeter();
-			console.log(meter);
+			this.log(meter);
 		}	catch (error) {
-			console.log(error);
+			this.log(error);
 		}
 	}
 
