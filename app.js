@@ -1,5 +1,5 @@
 /*
-Copyright 2016, 2017, 2018, Robin de Gruijter (gruijter@hotmail.com)
+Copyright 2016 - 2019, Robin de Gruijter (gruijter@hotmail.com)
 
 This file is part of com.plugwise.smile.
 
@@ -31,17 +31,26 @@ class MyApp extends Homey.App {
 		this.ledring = new Ledring();
 		this.logger = new Logger();	// [logName] [, logLength]
 
+		// register some listeners
 		process.on('unhandledRejection', (error) => {
 			this.error('unhandledRejection! ', error);
 		});
-		Homey.on('unload', () => {
-			this.log('app unload called');
-			// save logs to persistant storage
-			this.logger.saveLogs();
+		process.on('uncaughtException', (error) => {
+			this.error('uncaughtException! ', error);
 		});
-		// testing stuff
-		// this.smile = new SmileP1('', '');	// smileId, host, port
-		// this.testSmile();
+		Homey
+			.on('unload', () => {
+				this.log('app unload called');
+				// save logs to persistant storage
+				this.logger.saveLogs();
+			})
+			.on('memwarn', () => {
+				this.log('memwarn!');
+			});
+		// do garbage collection every 10 minutes
+		this.intervalIdGc = setInterval(() => {
+			global.gc();
+		}, 1000 * 60 * 10);
 	}
 
 	// ============================================================
@@ -49,6 +58,7 @@ class MyApp extends Homey.App {
 	deleteLogs() {
 		return this.logger.deleteLogs();
 	}
+
 	getLogs() {
 		return this.logger.logArray;
 	}

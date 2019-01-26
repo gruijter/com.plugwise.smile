@@ -1,5 +1,5 @@
 /*
-Copyright 2016, 2017, 2018, Robin de Gruijter (gruijter@hotmail.com)
+Copyright 2016 - 2019, Robin de Gruijter (gruijter@hotmail.com)
 
 This file is part of com.plugwise.smile.
 
@@ -23,7 +23,9 @@ const http = require('http');
 // const util = require('util');
 
 const meterPath = '/core/modules';
-// const getFirmwarePath = '/update/firmware';
+// const objectsPath = '/core/domain_objects';
+// const firmwarePath = '/update/firmware';
+// const wifiPath = '/configuration/wifi';
 const defaultPort = 80;
 
 const regexMeasurePower = new RegExp(/unit='W' directionality='consumed'>(.*?)<\/measurement>/);
@@ -71,8 +73,7 @@ class SmileP1 {
 							powerTm,
 						};
 					}	catch (error) {
-						reject(Error('Error parsing power information'));
-						return readings;
+						return reject(Error('Error parsing power information'));
 					}
 					try {
 						const gas = Number(regexGas.exec(result.body)[1]);
@@ -235,4 +236,167 @@ firmware XML:
 		</upgrade>
 	</firmware>
 </update>
+
+
+domain objects:
+<domain_objects>
+<module id="b278caf322124cf0bd4b84c0e514a295">
+<vendor_name>Xemex</vendor_name>
+<vendor_model>XMX5XMXABCE000021673</vendor_model>
+<hardware_version/>
+<firmware_version/>
+<created_date>2013-04-08T09:00:00+02:00</created_date>
+<modified_date>2019-01-26T15:40:02.447+01:00</modified_date>
+<deleted_date/>
+<services>
+<electricity_cumulative_meter id="a17aa51dda834556905f3ea1689d18f7">
+<measurement log_date="2019-01-26T15:35:00+01:00" unit="Wh" directionality="produced" tariff_indicator="nl_offpeak">1575458.000</measurement>
+<measurement log_date="2019-01-26T15:35:00+01:00" unit="Wh" directionality="produced" tariff_indicator="nl_peak">4267304.000</measurement>
+<measurement log_date="2019-01-26T15:35:00+01:00" unit="Wh" directionality="consumed" tariff_indicator="nl_offpeak">16796096.000</measurement>
+<measurement log_date="2019-01-26T15:35:00+01:00" unit="Wh" directionality="consumed" tariff_indicator="nl_peak">10393436.000</measurement>
+</electricity_cumulative_meter>
+<electricity_interval_meter id="6765e34867314ccb886bb72455610694">
+<measurement log_date="2019-01-26T15:00:00+01:00" unit="Wh" interval="PT300S" directionality="produced" tariff_indicator="nl_offpeak">-0.000</measurement>
+<measurement log_date="2019-01-26T15:00:00+01:00" unit="Wh" interval="PT300S" directionality="produced" tariff_indicator="nl_peak">0.000</measurement>
+<measurement log_date="2019-01-26T15:00:00+01:00" unit="Wh" interval="PT300S" directionality="consumed" tariff_indicator="nl_offpeak">562.000</measurement>
+<measurement log_date="2019-01-26T15:00:00+01:00" unit="Wh" interval="PT300S" directionality="consumed" tariff_indicator="nl_peak">0.000</measurement>
+</electricity_interval_meter>
+<electricity_point_meter id="c35b5cf0b4eb46c2989dba87d07b1b7b">
+<measurement log_date="2019-01-26T15:39:56+01:00" unit="W" directionality="produced">0.000</measurement>
+<measurement log_date="2019-01-26T15:39:56+01:00" unit="W" directionality="consumed">320.000</measurement>
+</electricity_point_meter>
+</services>
+<protocols>
+<dsmrmain id="7ce8353c44db4198bb83d446b68cec01">
+<serial>98108309 </serial>
+<dsmrmbuses>
+<dsmrgas id="f7b2aeab9f1e43e8b4e2d37b73f96045"/>
+</dsmrmbuses>
+</dsmrmain>
+</protocols>
+</module>
+<module id="b48aaa16b25046baa84feaa084922e8f">
+<vendor_name/>
+<vendor_model/>
+<hardware_version/>
+<firmware_version/>
+<created_date>2013-04-08T08:00:00+02:00</created_date>
+<modified_date>2019-01-26T15:40:02.447+01:00</modified_date>
+<deleted_date/>
+<services>
+<gas_interval_meter id="9a438f7016734f3cb3835e8c3a9b92d5">
+<measurement log_date="2019-01-26T14:00:00+01:00" unit="m3" interval="PT1H" directionality="consumed">0.207</measurement>
+</gas_interval_meter>
+<gas_cumulative_meter id="44e77f7762c84cc8973a752a8128caf5">
+<measurement log_date="2019-01-26T15:00:00+01:00" unit="m3" directionality="consumed">6542.004</measurement>
+</gas_cumulative_meter>
+</services>
+<protocols>
+<dsmrgas id="f7b2aeab9f1e43e8b4e2d37b73f96045">
+<serial>28011001147026511</serial>
+<dsmrmain id="7ce8353c44db4198bb83d446b68cec01"/>
+</dsmrgas>
+</protocols>
+</module>
+<location id="fafcd13da58c4547816ca7f01b68c97a">
+<name>P1 Meter</name>
+<description/>
+<type>building</type>
+<created_date>2012-07-31T15:05:08+02:00</created_date>
+<modified_date>2015-03-24T12:55:17+01:00</modified_date>
+<deleted_date/>
+<actuators/>
+<locations/>
+<appliances/>
+<services>
+<electricity_interval_meter id="6765e34867314ccb886bb72455610694"/>
+<gas_cumulative_meter id="44e77f7762c84cc8973a752a8128caf5"/>
+<gas_interval_meter id="9a438f7016734f3cb3835e8c3a9b92d5"/>
+<electricity_point_meter id="c35b5cf0b4eb46c2989dba87d07b1b7b"/>
+<electricity_cumulative_meter id="a17aa51dda834556905f3ea1689d18f7"/>
+</services>
+<logs>
+<point_log id="1b9c83a9e28d4f33bfa5fcc5b8435a71">
+<unit>W</unit>
+<type>electricity_produced</type>
+<last_consecutive_log_date>2019-01-26T15:39:56+01:00</last_consecutive_log_date>
+<updated_date>2019-01-26T15:39:56+01:00</updated_date>
+<period start_date="2015-02-21T12:30:05+01:00" end_date="2019-01-26T15:39:56+01:00">
+<measurement log_date="2019-01-26T15:39:56+01:00">0.000</measurement>
+</period>
+</point_log>
+<interval_log id="3418669cbeee4913b5e6ef4564dc28db">
+<unit>Wh</unit>
+<type>electricity_consumed</type>
+<last_consecutive_log_date>2019-01-26T14:00:00+01:00</last_consecutive_log_date>
+<updated_date>2019-01-26T15:00:00+01:00</updated_date>
+<interval>PT300S</interval>
+<period start_date="2015-02-21T13:00:00+01:00" end_date="2019-01-26T15:00:00+01:00" interval="PT1H">
+<measurement log_date="2019-01-26T15:00:00+01:00" tariff_indicator="nl_offpeak">562.000</measurement>
+<measurement log_date="2019-01-26T15:00:00+01:00" tariff_indicator="nl_peak">0.000</measurement>
+</period>
+</interval_log>
+<point_log id="1ef46525fa584c38b02b9a52227f2907">
+<unit>W</unit>
+<type>electricity_consumed</type>
+<last_consecutive_log_date>2019-01-26T15:39:56+01:00</last_consecutive_log_date>
+<updated_date>2019-01-26T15:39:56+01:00</updated_date>
+<period start_date="2015-02-21T12:30:05+01:00" end_date="2019-01-26T15:39:56+01:00">
+<measurement log_date="2019-01-26T15:39:56+01:00">320.000</measurement>
+</period>
+</point_log>
+<cumulative_log id="497cc22ea315486fade7fae0b2ab730e">
+<unit>Wh</unit>
+<type>electricity_consumed</type>
+<last_consecutive_log_date>2019-01-26T15:35:00+01:00</last_consecutive_log_date>
+<updated_date>2019-01-26T15:35:00+01:00</updated_date>
+<period start_date="2015-02-21T12:30:05+01:00" end_date="2019-01-26T15:35:00+01:00">
+<measurement log_date="2019-01-26T15:35:00+01:00" tariff_indicator="nl_offpeak">16796096.000</measurement>
+<measurement log_date="2019-01-26T15:35:00+01:00" tariff_indicator="nl_peak">10393436.000</measurement>
+</period>
+</cumulative_log>
+<cumulative_log id="9ce1baaf6a7a4d5fb01ac07524b37315">
+<unit>Wh</unit>
+<type>electricity_produced</type>
+<last_consecutive_log_date>2019-01-26T15:35:00+01:00</last_consecutive_log_date>
+<updated_date>2019-01-26T15:35:00+01:00</updated_date>
+<period start_date="2015-02-21T12:30:05+01:00" end_date="2019-01-26T15:35:00+01:00">
+<measurement log_date="2019-01-26T15:35:00+01:00" tariff_indicator="nl_offpeak">1575458.000</measurement>
+<measurement log_date="2019-01-26T15:35:00+01:00" tariff_indicator="nl_peak">4267304.000</measurement>
+</period>
+</cumulative_log>
+<cumulative_log id="565ac17fc65048479dfc17a34db294c1">
+<unit>m3</unit>
+<type>gas_consumed</type>
+<last_consecutive_log_date>2019-01-26T15:00:00+01:00</last_consecutive_log_date>
+<updated_date>2019-01-26T15:00:00+01:00</updated_date>
+<period start_date="2015-02-21T13:00:00+01:00" end_date="2019-01-26T15:00:00+01:00">
+<measurement log_date="2019-01-26T15:00:00+01:00">6542.004</measurement>
+</period>
+</cumulative_log>
+<interval_log id="46874d195710417eadf4d033587690d6">
+<unit>m3</unit>
+<type>gas_consumed</type>
+<last_consecutive_log_date>2019-01-26T14:00:00+01:00</last_consecutive_log_date>
+<updated_date>2019-01-26T14:00:00+01:00</updated_date>
+<interval>PT1H</interval>
+<period start_date="2015-02-21T13:00:00+01:00" end_date="2019-01-26T14:00:00+01:00" interval="PT1H">
+<measurement log_date="2019-01-26T14:00:00+01:00">0.207</measurement>
+</period>
+</interval_log>
+<interval_log id="b0405bfdc023490592642a7882bae5b6">
+<unit>Wh</unit>
+<type>electricity_produced</type>
+<last_consecutive_log_date>2019-01-26T14:00:00+01:00</last_consecutive_log_date>
+<updated_date>2019-01-26T15:00:00+01:00</updated_date>
+<interval>PT300S</interval>
+<period start_date="2015-02-21T13:00:00+01:00" end_date="2019-01-26T15:00:00+01:00" interval="PT1H">
+<measurement log_date="2019-01-26T15:00:00+01:00" tariff_indicator="nl_offpeak">-0.000</measurement>
+<measurement log_date="2019-01-26T15:00:00+01:00" tariff_indicator="nl_peak">0.000</measurement>
+</period>
+</interval_log>
+</logs>
+</location>
+</domain_objects>
+
 */
