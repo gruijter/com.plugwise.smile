@@ -9,10 +9,21 @@
 		"success": "Succes!"
 	},
 	"settings": {
-		"app": {
-			"title": "Plugwise Smile P1 Debug Logs",
+		"benefit": "Koppel Plugwise Smile P1 energie meter",
+		"tab1": {
+			"title": "Instructies",
+			"addDeviceTitle": "Koppel nieuw apparaat",
+			"addDeviceInstructions": "Voeg een nieuw apparaat toe via de Homey tab `Apparaten`. Voer het vaste IP addres en Smile ID in. De ID staat geprint op het apparaat, of kan in de originele Plugwise app worden gevonden. De polling snelheid kan worden aangepast in de apparaat instellingen.",
+			"ledringTitle": "LED ring aanzetten",
+			"ledringInstructions": "De Homey LED ring kan je laten zien hoeveel energie je gebruikt en produceert. Ga naar de Homey instellingen `LED Ring` en selecteer `Plugwise Smile P1 Energie` als screensaver."
+		},
+		"tab2": {
+			"title": "Logs",
 			"logs": "Logs",
-			"getlogs": "Logs verversen"
+			"deletelogs": "Wis alle logs",
+			"updateLogs": "Ververs logs",
+			"deleteWarning": "Alle logs verwijderen?",
+			"deleted": "Logs verwijderd!"
 		}
 	}
 }

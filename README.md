@@ -30,18 +30,9 @@ and if you really like it you can buy me a beer.
 [![Paypal donate][pp-donate-image]][pp-donate-link]
 ===============================================================================
 
-Version changelog
+Version changelog: [changelog.txt]
 
-```
-v2.1.0	2019.01.26 Homey V2 icons and insights. Ledring fix. Memory optimizations. New forum link.
-v2.0.4	2018.05.04 Update device settings bug fixed
-v2.0.3	2018.03.12 License info extended.
-v2.0.2	2018.01.29 Minor fix.
-v2.0.1	2018.01.19 Minor fixes. Stable release.
-v2.0.0	2018.01.14 Complete rewrite to sdk2.
-v1.1.2  2017.04.19 Added polling interval setting
-v0.9.5  2016.06.01 Initial release
-```
 [forum]: https://community.athom.com/t/8012
 [pp-donate-link]: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=M9M847YNL7SB2
 [pp-donate-image]: https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif
+[changelog.txt]: https://github.com/gruijter/com.plugwise.smile/blob/master/changelog.txt
