@@ -1,20 +1,20 @@
 /*
-Copyright 2017 - 2019, Robin de Gruijter (gruijter@hotmail.com)
+Copyright 2016 - 2019, Robin de Gruijter (gruijter@hotmail.com)
 
-This file is part of com.gruijter.enelogic.
+This file is part of com.plugwise.smile.
 
-com.gruijter.enelogic is free software: you can redistribute it and/or modify
+com.plugwise.smile is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-com.gruijter.enelogic is distributed in the hope that it will be useful,
+com.plugwise.smile is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with com.gruijter.enelogic.  If not, see <http://www.gnu.org/licenses/>.
+along with com.plugwise.smile.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 'use strict';
@@ -69,35 +69,36 @@ class Ledring {
 	}
 
 	change(deviceSettings, measurepower) {
-		let limit = ((24 * measurepower) / deviceSettings.ledring_usage_limit).toFixed(0);
-		if (measurepower >= 0) {	// consuming power makes ledring red
-			if (deviceSettings.ledring_usage_limit === 0) {	// ignore change when limit setting is 0
-				return;
+		try {
+			let limit = ((24 * measurepower) / deviceSettings.ledring_usage_limit).toFixed(0);
+			if (measurepower >= 0) {	// consuming power makes ledring red
+				if (deviceSettings.ledring_usage_limit === 0) {	// ignore change when limit setting is 0
+					return;
+				}
+				if (limit > 24) { limit = 24; }
+				for (let pixel = 0; pixel < 24; pixel += 1) {
+					if (pixel < limit) {
+						this.framePower[pixel] = { r: 80,	g: 0,	b: 0	};
+					} else { this.framePower[pixel] = { r: 0, g: 80, b: 0 }; }
+				}
+				this.framesPower[0] = this.framePower;
+			} else {	// producing power makes ledring blue
+				if (deviceSettings.ledring_production_limit === 0) {	// ignore change when limit setting is 0
+					return;
+				}
+				limit = -limit;
+				if (limit > 24) { limit = 24; }
+				for (let pixel = 0; pixel < 24; pixel += 1) {
+					if (pixel < limit) {
+						this.framePower[pixel] = { r: 0,	g: 0,	b: 120 };
+					} else { this.framePower[pixel] = { r: 0, g: 80, b: 0 }; }
+				}
+				this.framesPower[0] = this.framePower;
 			}
-			if (limit > 24) { limit = 24; }
-			for (let pixel = 0; pixel < 24; pixel += 1) {
-				if (pixel < limit) {
-					this.framePower[pixel] = { r: 80,	g: 0,	b: 0	};
-				} else { this.framePower[pixel] = { r: 0, g: 80, b: 0 }; }
-			}
-			this.framesPower[0] = this.framePower;
-		} else {	// producing power makes ledring blue
-			if (deviceSettings.ledring_production_limit === 0) {	// ignore change when limit setting is 0
-				return;
-			}
-			limit = -limit;
-			if (limit > 24) { limit = 24; }
-			for (let pixel = 0; pixel < 24; pixel += 1) {
-				if (pixel < limit) {
-					this.framePower[pixel] = { r: 0,	g: 0,	b: 120 };
-				} else { this.framePower[pixel] = { r: 0, g: 80, b: 0 }; }
-			}
-			this.framesPower[0] = this.framePower;
+			this.animation.updateFrames(this.framesPower);
+		} catch (error) {
+			Homey.app.log(error);
 		}
-		this.animation.updateFrames(this.framesPower)
-			.catch((error) => {
-				this.log(error);
-			});
 	}
 
 }

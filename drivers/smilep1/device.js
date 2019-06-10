@@ -25,7 +25,7 @@ class SmileP1Device extends Homey.Device {
 
 	// this method is called when the Device is inited
 	async onInit() {
-		// this.log('device init: ', this.getName(), 'id:', this.getData().id);
+		this.log('device init: ', this.getName(), 'id:', this.getData().id);
 		try {
 			// init some stuff
 			this._driver = this.getDriver();
@@ -140,7 +140,8 @@ class SmileP1Device extends Homey.Device {
 
 	setCapability(capability, value) {
 		if (this.hasCapability(capability)) {
-			this.setCapabilityValue(capability, value);
+			this.setCapabilityValue(capability, value)
+				.catch(this.log);
 		}
 	}
 
@@ -156,17 +157,6 @@ class SmileP1Device extends Homey.Device {
 			this.setCapability('meter_power.offPeak', this.meters.lastMeterPowerOffpeak);
 			this.setCapability('meter_power.producedPeak', this.meters.lastMeterPowerPeakProduced);
 			this.setCapability('meter_power.producedOffPeak', this.meters.lastMeterPowerOffpeakProduced);
-			// update the device info
-			// const deviceInfo = this.youless.info;
-			// const settings = this.getSettings();
-			// Object.keys(deviceInfo).forEach((key) => {
-			// 	if (settings[key] !== deviceInfo[key].toString()) {
-			// 		this.log(`device information has changed. ${key}: ${deviceInfo[key].toString()}`);
-			// 		this.setSettings({ [key]: deviceInfo[key].toString() })
-			// 			.catch(this.error);
-			// 	}
-			// });
-			// reset watchdog
 			this.watchDogCounter = 10;
 		} catch (error) {
 			this.error(error);
