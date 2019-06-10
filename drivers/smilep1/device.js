@@ -29,14 +29,19 @@ class SmileP1Device extends Homey.Device {
 		try {
 			// init some stuff
 			this._driver = this.getDriver();
-			this._ledring = Homey.app.ledring;
+			this._ledring = this._driver.ledring;
 			this.handleNewReadings = this._driver.handleNewReadings.bind(this);
 			this.watchDogCounter = 10;
 			const settings = this.getSettings();
 			this.meters = {};
 			this.initMeters();
-			// create smile session
-			this.smile = new this._driver.Smile(settings.smileId, settings.smileIp);
+			// create youless session
+			const options = {
+				id: settings.smileId,
+				host: settings.smileIp,
+				port: Number(settings.port) || 80,
+			};
+			this.smile = new this._driver.Smile(options);
 			// register trigger flow cards of custom capabilities
 			this.tariffChangedTrigger = new Homey.FlowCardTriggerDevice('tariff_changed')
 				.register();
@@ -45,9 +50,9 @@ class SmileP1Device extends Homey.Device {
 			// register condition flow cards
 			const offPeakCondition = new Homey.FlowCardCondition('offPeak');
 			offPeakCondition.register()
-				.registerRunListener(() => Promise.resolve(this.meters.lastOffpeak)); // this.log('offPeak condition flow card requested');
+				.registerRunListener(() => Promise.resolve(this.meters.lastOffpeak));
 			// start polling device for info
-			this.intervalIdDevicePoll = setInterval(() => {
+			this.intervalIdDevicePoll = setInterval(async () => {
 				try {
 					if (this.watchDogCounter <= 0) {
 						// restart the app here
@@ -55,10 +60,11 @@ class SmileP1Device extends Homey.Device {
 						this.restartDevice();
 					}
 					// get new readings and update the devicestate
-					this.doPoll();
+					await this.doPoll();
+					this.watchDogCounter = 10;
 				} catch (error) {
 					this.watchDogCounter -= 1;
-					this.log('intervalIdDevicePoll error', error);
+					this.error('intervalIdDevicePoll error', error);
 				}
 			}, 1000 * settings.pollingInterval);
 		} catch (error) {
@@ -85,33 +91,22 @@ class SmileP1Device extends Homey.Device {
 	// this method is called when the user has changed the device's settings in Homey.
 	onSettings(oldSettingsObj, newSettingsObj, changedKeysArr, callback) {
 		this.log('settings change requested by user');
-		this.log(newSettingsObj);
-		this.smile.getMeter(newSettingsObj.smileId, newSettingsObj.smileIp)
-			.then(() => {		// new settings are correct
-				this.log(`${this.getName()} device settings changed`);
-				// do callback to confirm settings change
-				callback(null, true);
-				this.restartDevice();
-			})
-			.catch((error) => {		// new settings are incorrect
-				this.error(error.message);
-				this.smile.getMeter(oldSettingsObj.smileId, oldSettingsObj.smileIp);
-				return callback(error);
-			});
+		// this.log(newSettingsObj);
+		this.log(`${this.getName()} device settings changed`);
+		// do callback to confirm settings change
+		callback(null, true);
+		this.restartDevice();
 	}
 
 	async doPoll() {
 		// this.log('polling for new readings');
 		try {
-			let readings = {};
-			readings = await this.smile.getMeter();
+			const readings = await this.smile.getMeterReadings();
 			this.setAvailable();
 			this.handleNewReadings(readings);
 		} catch (error) {
 			this.watchDogCounter -= 1;
-			this.log(`poll error: ${error}`);
-			this.setUnavailable(error)
-				.catch(this.error);
+			this.error(`poll error: ${error}`);
 		}
 	}
 
@@ -142,18 +137,35 @@ class SmileP1Device extends Homey.Device {
 		};
 	}
 
+
+	setCapability(capability, value) {
+		if (this.hasCapability(capability)) {
+			this.setCapabilityValue(capability, value);
+		}
+	}
+
 	updateDeviceState() {
 		// this.log(`updating states for: ${this.getName()}`);
 		try {
-			this.setCapabilityValue('measure_power', this.meters.lastMeasurePower);
-			this.setCapabilityValue('meter_offPeak', this.meters.lastOffpeak);
-			this.setCapabilityValue('measure_gas', this.meters.lastMeasureGas);
-			this.setCapabilityValue('meter_gas', this.meters.lastMeterGas);
-			this.setCapabilityValue('meter_power', this.meters.lastMeterPower);
-			this.setCapabilityValue('meter_power.peak', this.meters.lastMeterPowerPeak);
-			this.setCapabilityValue('meter_power.offPeak', this.meters.lastMeterPowerOffpeak);
-			this.setCapabilityValue('meter_power.producedPeak', this.meters.lastMeterPowerPeakProduced);
-			this.setCapabilityValue('meter_power.producedOffPeak', this.meters.lastMeterPowerOffpeakProduced);
+			this.setCapability('measure_power', this.meters.lastMeasurePower);
+			this.setCapability('meter_power', this.meters.lastMeterPower);
+			this.setCapability('measure_gas', this.meters.lastMeasureGas);
+			this.setCapability('meter_gas', this.meters.lastMeterGas);
+			this.setCapability('meter_power.peak', this.meters.lastMeterPowerPeak);
+			this.setCapability('meter_offPeak', this.meters.lastOffpeak);
+			this.setCapability('meter_power.offPeak', this.meters.lastMeterPowerOffpeak);
+			this.setCapability('meter_power.producedPeak', this.meters.lastMeterPowerPeakProduced);
+			this.setCapability('meter_power.producedOffPeak', this.meters.lastMeterPowerOffpeakProduced);
+			// update the device info
+			// const deviceInfo = this.youless.info;
+			// const settings = this.getSettings();
+			// Object.keys(deviceInfo).forEach((key) => {
+			// 	if (settings[key] !== deviceInfo[key].toString()) {
+			// 		this.log(`device information has changed. ${key}: ${deviceInfo[key].toString()}`);
+			// 		this.setSettings({ [key]: deviceInfo[key].toString() })
+			// 			.catch(this.error);
+			// 	}
+			// });
 			// reset watchdog
 			this.watchDogCounter = 10;
 		} catch (error) {

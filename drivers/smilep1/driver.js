@@ -1,3 +1,5 @@
+/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable prefer-destructuring */
 /*
 Copyright 2016 - 2019, Robin de Gruijter (gruijter@hotmail.com)
 
@@ -20,29 +22,71 @@ along with com.plugwise.smile.  If not, see <http://www.gnu.org/licenses/>.
 'use strict';
 
 const Homey = require('homey');
-const SmileP1 = require('../../smileP1.js');
+const SmileP1 = require('smilep1');
+const Ledring = require('../../ledring.js');
 
 class SmileP1Driver extends Homey.Driver {
 
 	onInit() {
 		this.log('entering SmileP1 driver');
 		this.Smile = SmileP1;
+		this.ledring = new Ledring('smile_power');
 	}
 
 	onPair(socket) {
 		socket.on('validate', async (data, callback) => {
 			try {
 				this.log('save button pressed in frontend');
-				const smile = new this.Smile(data.smileId, data.smileIp);
-				// this.log(smile);
-				// try to get status
-				await smile.getMeter()
-					.then(() => {
-						callback(null, ' Smile device found!'); // report success to frontend
-					})
+				const host = data.smileIp.split(':')[0];
+				const port = Number(data.smileIp.split(':')[1]) || 80;
+				const options = {
+					id: data.smileId,
+					host,
+					port,
+				};
+				const smile = new this.Smile(options);
+				await smile.getMeterReadings()
 					.catch((error) => {
 						callback(error);
 					});
+				const device = {
+					name: `Smile_${data.smileId}`,
+					data: { id: data.smileId },
+					settings: {
+						smileIp: host,
+						port,
+						smileId: data.smileId,
+						ledring_usage_limit: 3000,
+						ledring_production_limit: 3000,
+					},
+					capabilities: [
+						'measure_power',
+						'meter_power',
+						// 'measure_gas',
+						// 'meter_gas',
+						// 'meter_offPeak',
+						// 'meter_power.peak',
+						// 'meter_power.offPeak',
+						// 'meter_power.producedPeak',
+						// 'meter_power.producedOffPeak',
+					],
+				};
+				if (data.includeOffPeak) {
+					device.capabilities.push('meter_offPeak');
+					device.capabilities.push('meter_power.peak');
+					device.capabilities.push('meter_power.offPeak');
+				}
+				if (data.includeProduction) {
+					device.capabilities.push('meter_power.producedPeak');
+				}
+				if (data.includeProduction && data.includeOffPeak) {
+					device.capabilities.push('meter_power.producedOffPeak');
+				}
+				if (data.includeGas) {
+					device.capabilities.push('measure_gas');
+					device.capabilities.push('meter_gas');
+				}
+				callback(null, JSON.stringify(device)); // report success to frontend
 			}	catch (error) {
 				this.error('Pair error', error);
 				if (error.code === 'EHOSTUNREACH') {
@@ -56,35 +100,28 @@ class SmileP1Driver extends Homey.Driver {
 	handleNewReadings(readings) {	// call with device as this
 		// this.log(`handling new readings for ${this.getName()}`);
 		// gas readings from device
-		let meterGas = this.meters.lastMeterGas;
+		const meterGas = readings.gas; // gas_cumulative_meter
+		const meterGasTm = readings.gtm; // gas_meter_timestamp
 		let measureGas = this.meters.lastMeasureGas;
-		let meterGasTm = this.meters.lastMeterGasTm;
-		if (readings.g !== undefined) {
-			meterGas = readings.g.gas; // gas_cumulative_meter
-			meterGasTm = readings.g.gasTm / 1000; // gas_meter_timestamp
-			// constructed gas readings
-			if (this.meters.lastMeterGasTm !== meterGasTm) {
-				if (this.meters.lastMeterGas !== null) {	// first reading after init
-					const hoursPassed = (meterGasTm - this.meters.lastMeterGasTm) / 3600;	// hrs
-					// if (hoursPassed > 1.5) { // too long ago; assume 1 hour interval
-					// 	hoursPassed = 1;
-					// }
-					measureGas = Math.round(1000 * ((meterGas - this.meters.lastMeterGas) / hoursPassed)) / 1000; // gas_interval_meter
-				}
-				this.meters.lastMeterGasTm = meterGasTm;
+		// constructed gas readings
+		const meterGasChanged = (this.meters.lastMeterGas !== meterGas) && (this.meters.lastMeterGasTm !== 0);
+		const meterGasTmChanged = (meterGasTm !== this.meters.lastMeterGasTm) && (this.meters.lastMeterGasTm !== 0);
+		if (meterGasChanged || meterGasTmChanged) {
+			const passedHours = (meterGasTm - this.meters.lastMeterGasTm) / 3600000;
+			if (passedHours > 0) {
+				measureGas = Math.round((meterGas - this.meters.lastMeterGas) / passedHours) / 1000; // gas_interval_meter
 			}
 		}
-
 		// electricity readings from device
-		const meterPowerOffpeakProduced = readings.e.powerOffpeakProduced;
-		const meterPowerPeakProduced = readings.e.powerPeakProduced;
-		const meterPowerOffpeak = readings.e.powerOffpeak;
-		const meterPowerPeak = readings.e.powerPeak;
-		let measurePower = (readings.e.measurePower - readings.e.measurePowerProduced);
+		const meterPowerOffpeakProduced = readings.n1;
+		const meterPowerPeakProduced = readings.n2;
+		const meterPowerOffpeak = readings.p1;
+		const meterPowerPeak = readings.p2;
+		const meterPower = readings.net;
+		let measurePower = readings.pwr;
 		let measurePowerAvg = this.meters.lastMeasurePowerAvg;
-		const meterPowerTm = readings.e.powerTm / 1000;
+		const meterPowerTm = readings.tm;
 		// constructed electricity readings
-		const meterPower = (meterPowerOffpeak + meterPowerPeak) - (meterPowerOffpeakProduced + meterPowerPeakProduced);
 		let offPeak = this.meters.lastOffpeak;
 		if ((meterPower - this.meters.lastMeterPower) !== 0) {
 			offPeak = ((meterPowerOffpeakProduced - this.meters.lastMeterPowerOffpeakProduced) > 0
@@ -111,7 +148,7 @@ class SmileP1Driver extends Homey.Driver {
 			this.tariffChangedTrigger
 				.trigger(this, tokens)
 				.catch(this.error);
-			// .then(this.error('Tariff change flow card triggered'));
+			// .then(this.log('Tariff change flow card triggered'));
 		}
 		if (measurePower !== this.meters.lastMeasurePower) {
 			const tokens = {
@@ -123,20 +160,20 @@ class SmileP1Driver extends Homey.Driver {
 				.catch(this.error);
 			// .then(this.error('Power change flow card triggered'));
 			// update the ledring screensavers
-			this._ledring.change(this.getSettings(), this.meters.lastMeasurePower);
+			this._ledring.change(this.getSettings(), measurePower);
 		}
 		// store the new readings in memory
-		this.meters.lastMeasureGas = measureGas;
-		this.meters.lastMeterGas = meterGas;
+		this.meters.lastMeasureGas = measureGas; // || this.meters.lastMeasureGas;
+		this.meters.lastMeterGas = meterGas; // || this.meters.lastMeterGas;
 		this.meters.lastMeterGasTm = meterGasTm || this.meters.lastMeterGasTm;
-		this.meters.lastMeasurePower = measurePower;
-		this.meters.lastMeasurePowerAvg = measurePowerAvg;
-		this.meters.lastMeterPower = meterPower;
-		this.meters.lastMeterPowerPeak = meterPowerPeak;
-		this.meters.lastMeterPowerOffpeak = meterPowerOffpeak;
-		this.meters.lastMeterPowerPeakProduced = meterPowerPeakProduced;
-		this.meters.lastMeterPowerOffpeakProduced = meterPowerOffpeakProduced;
-		this.meters.lastMeterPowerTm = meterPowerTm;
+		this.meters.lastMeasurePower = measurePower; // || this.meters.lastMeasurePower;
+		this.meters.lastMeasurePowerAvg = measurePowerAvg; // || this.meters.lastMeasurePowerAvg;
+		this.meters.lastMeterPower = meterPower; // || this.meters.lastMeterPower;
+		this.meters.lastMeterPowerPeak = meterPowerPeak; // || this.meters.lastMeterPowerPeak;
+		this.meters.lastMeterPowerOffpeak = meterPowerOffpeak; // || this.meters.lastMeterPowerOffpeak;
+		this.meters.lastMeterPowerPeakProduced = meterPowerPeakProduced; // || this.meters.lastMeterPowerPeakProduced;
+		this.meters.lastMeterPowerOffpeakProduced = meterPowerOffpeakProduced; // || this.meters.lastMeterPowerOffpeakProduced;
+		this.meters.lastMeterPowerTm = meterPowerTm || this.meters.lastMeterPowerTm;
 		this.meters.lastOffpeak = offPeak;
 		// update the device state
 		// this.log(this.meters);

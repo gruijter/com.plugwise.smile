@@ -1,15 +1,19 @@
 {
 	"pair": {
-		"title": "Add device",
-		"intro": "Enter the IP address and ID of the Smile P1.",
+		"title": "Add Smile P1",
+		"instructions": "Enter the IP address and ID of the Smile P1. De-select any meters that you do not need. The main power is always included. Note: It is not possible to add meters afterwards without deleting the device first!",
+		"includeMeters": "Include meters",
+		"includeProduction": "Power production",
+		"includeOffPeak": "Off-peak",
+		"includeGas": "Gas",
 		"host": "IP address",
-		"smileId": "Smile ID",
+		"password": "Smile ID",
 		"required": "The IP address and SmileId are required",
 		"testSettings": "Save",
 		"success": "Success!"
-	},
+  },
 	"settings": {
-		"benefit": "Integrate Plugwise Smile P1 energy meter",
+		"benefit": "Integrate Plugwise Smile P1 energy meter, reduce your CO2 footprint.",
 		"tab1": {
 			"title": "Instructions",
 			"addDeviceTitle": "Add a new device",

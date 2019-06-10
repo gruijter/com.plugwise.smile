@@ -20,15 +20,13 @@ along with com.plugwise.smile.  If not, see <http://www.gnu.org/licenses/>.
 'use strict';
 
 const Homey = require('homey');
-const Ledring = require('./ledring.js');
 const Logger = require('./captureLogs.js');
-// const SmileP1 = require('./smileP1.js');
 
 class MyApp extends Homey.App {
 
 	onInit() {
 		this.log('Plugwise Smile P1 App is running!');
-		this.ledring = new Ledring();
+		// this.ledring = new Ledring();
 		this.logger = new Logger();	// [logName] [, logLength]
 
 		// register some listeners

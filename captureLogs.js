@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 /*
 Copyright 2016 - 2019, Robin de Gruijter (gruijter@hotmail.com)
 

@@ -1,15 +1,19 @@
 {
 	"pair": {
-		"title": "Device toevoegen",
-		"intro": "Voer het IP adres en ID in van de Smile P1.",
+		"title": "Toevoegen Smile P1",
+		"instructions": "Geef het the IP adres en het ID van de Smile P1. De-select any meters that you do not need. The main power is always included. Note: It is not possible to add meters afterwards without deleting the device first!",
+		"includeMeters": "Meters weergeven",
+		"includeProduction": "Stroom teruglevering",
+		"includeOffPeak": "Dal tarief",
+		"includeGas": "Gas",
 		"host": "IP adres",
-		"smileId": "Smile ID",
-		"required": "Het IP adres en SmileID zijn verplicht",
+		"password": "Smile ID",
+		"required": "Het IP adres en Smile ID moeten worden ingevuld",
 		"testSettings": "Opslaan",
 		"success": "Succes!"
-	},
+  },
 	"settings": {
-		"benefit": "Koppel Plugwise Smile P1 energie meter",
+		"benefit": "Koppel de Smile P1 energie meter, reduceer je CO2 footprint",
 		"tab1": {
 			"title": "Instructies",
 			"addDeviceTitle": "Koppel nieuw apparaat",
