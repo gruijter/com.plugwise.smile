@@ -1,5 +1,5 @@
 
-v2.3.0  ***WIP*** 2019.06.10 SmileP1 package v 1.0.2. Select power meters during pair. Fix for Smile P1 firmware V3.
+v2.3.0  2019.06.11 SmileP1 package v 1.0.3. Select power meters during pair. Fix for Smile P1 firmware V3.
 v2.2.0  2019.02.03 Fix ledring Homey V2. App settings page optimized for V2 mobile.
 v2.1.0	2019.01.26 Homey V2 icons and insights. Ledring fix. Memory optimizations. New forum link.
 v2.0.4	2018.05.04 Update device settings bug fixed
