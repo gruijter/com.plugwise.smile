@@ -13,7 +13,7 @@
 		"en": [ "dsmr", "p1", "plugwise", "smile", "power", "water", "gas" ],
 		"nl": [ "dsmr", "p1", "plugwise", "smile", "power", "water", "gas" ]
 	},
-	"version": "2.3.0",
+	"version": "3.0.0",
 	"sdk": 2,
   "compatibility": ">= 1.5",
   "author": {

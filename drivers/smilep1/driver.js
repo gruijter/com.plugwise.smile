@@ -45,7 +45,7 @@ class SmileP1Driver extends Homey.Driver {
 					port,
 				};
 				const smile = new this.Smile(options);
-				await smile.getMeterReadings()
+				await smile._getMeterReadings2()
 					.catch((error) => {
 						callback(error);
 					});
