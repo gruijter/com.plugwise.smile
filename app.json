@@ -13,7 +13,7 @@
 		"en": [ "dsmr", "p1", "plugwise", "smile", "power", "water", "gas" ],
 		"nl": [ "dsmr", "p1", "plugwise", "smile", "power", "water", "gas" ]
 	},
-	"version": "3.0.0",
+	"version": "3.0.1",
 	"sdk": 2,
   "compatibility": ">= 1.5",
   "author": {
@@ -67,6 +67,7 @@
         "en": "Gas usage (previous hour)",
         "nl": "Gasverbruik (vorige uur)"
       },
+      "decimals": 4,
       "units": {
         "en": "m\u00B3",
         "nl": "m\u00B3"
@@ -75,9 +76,40 @@
       "setable": false,
       "insights": true,
       "icon": "./drivers/smilep1/assets/images/gas_icon.svg"
-    }
+    },
+    "meter_power": {
+			"type": "number",
+			"title": {
+				"en": "Power Meter",
+				"nl": "Energiemeter",
+				"de": "Energiezähler"
+			},
+			"decimals": 4,
+			"units": {
+				"en": "KWh"
+			},
+			"chartType": "spline",
+			"desc": {
+				"en": "Power usage in KiloWattHour (kWh)",
+				"nl": "Stroomverbuik in KiloWattUur (kWh)",
+				"de": "Energieverbrauch in Kilowattstunde (kWh)"
+			},
+			"options": {
+				"isGenerator": {
+					"type": "boolean",
+					"default": false,
+					"desc": {
+						"en": "This flag is used to determine whether this devices uses or generates power.",
+						"de": "Dieser Flag wird benutzt, um zu bestimmen, ob diese Geräte Energie verbrauchen oder produzieren."
+					}
+				}
+			},
+			"insights": true,
+			"getable": true,
+			"setable": false,
+			"uiComponent": "sensor"
+		}	
   },
-
   "drivers": [
     {
       "id": "smilep1",

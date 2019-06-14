@@ -101,7 +101,7 @@ class SmileP1Device extends Homey.Device {
 	async doPoll() {
 		// this.log('polling for new readings');
 		try {
-			const readings = await this.smile._getMeterReadings2();
+			const readings = await this.smile.getMeterReadings();
 			this.setAvailable();
 			this.handleNewReadings(readings);
 		} catch (error) {
