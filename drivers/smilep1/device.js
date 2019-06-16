@@ -141,7 +141,9 @@ class SmileP1Device extends Homey.Device {
 	setCapability(capability, value) {
 		if (this.hasCapability(capability)) {
 			this.setCapabilityValue(capability, value)
-				.catch(this.log);
+				.catch((error) => {
+					this.log(error, capability, value);
+				});
 		}
 	}
 

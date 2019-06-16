@@ -76,39 +76,7 @@
       "setable": false,
       "insights": true,
       "icon": "./drivers/smilep1/assets/images/gas_icon.svg"
-    },
-    "meter_power": {
-			"type": "number",
-			"title": {
-				"en": "Power Meter",
-				"nl": "Energiemeter",
-				"de": "Energiezähler"
-			},
-			"decimals": 4,
-			"units": {
-				"en": "KWh"
-			},
-			"chartType": "spline",
-			"desc": {
-				"en": "Power usage in KiloWattHour (kWh)",
-				"nl": "Stroomverbuik in KiloWattUur (kWh)",
-				"de": "Energieverbrauch in Kilowattstunde (kWh)"
-			},
-			"options": {
-				"isGenerator": {
-					"type": "boolean",
-					"default": false,
-					"desc": {
-						"en": "This flag is used to determine whether this devices uses or generates power.",
-						"de": "Dieser Flag wird benutzt, um zu bestimmen, ob diese Geräte Energie verbrauchen oder produzieren."
-					}
-				}
-			},
-			"insights": true,
-			"getable": true,
-			"setable": false,
-			"uiComponent": "sensor"
-		}	
+    }
   },
   "drivers": [
     {
@@ -134,29 +102,40 @@
         "meter_power.producedOffPeak"
       ],
       "capabilitiesOptions": {
+        "meter_power": {
+  				"title": {
+  					"en": "Power meter total",
+  					"nl": "Stroommeter totaal"
+          },
+          "decimals": 4
+        },
   			"meter_power.peak": {
   				"title": {
   					"en": "Power meter peak",
   					"nl": "Stroommeter piek"
-  				}
+  				},
+          "decimals": 4
         },
         "meter_power.offPeak": {
           "title": {
             "en": "Power meter off-peak",
             "nl": "Stroommeter dal"
-          }
+          },
+          "decimals": 4
         },
         "meter_power.producedPeak": {
           "title": {
             "en": "Production peak",
             "nl": "Productie piek"
-          }
+          },
+          "decimals": 4
         },
         "meter_power.producedOffPeak": {
           "title": {
             "en": "Production off-peak",
             "nl": "Productie dal"
-          }
+          },
+          "decimals": 4
         }
       },
 

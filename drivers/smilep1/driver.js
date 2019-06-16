@@ -118,8 +118,8 @@ class SmileP1Driver extends Homey.Driver {
 			const meterPowerPeakProduced = readings.n2 || this.meters.lastMeterPowerOffpeakProduced;
 			const meterPowerOffpeak = readings.p1 || this.meters.lastMeterPowerOffpeak;
 			const meterPowerPeak = readings.p2 || this.meters.lastMeterPowerPeak;
-			const meterPower = readings.net;
-			let measurePower = readings.pwr;
+			const meterPower = readings.net || this.meters.lastMeterPower;
+			let measurePower = readings.pwr || this.meters.lastMeasurePower;
 			let measurePowerAvg = this.meters.lastMeasurePowerAvg;
 			const meterPowerTm = readings.tm || this.meters.lastMeterPowerTm;
 			// constructed electricity readings
@@ -166,16 +166,16 @@ class SmileP1Driver extends Homey.Driver {
 			// store the new readings in memory
 			this.meters.lastMeasureGas = measureGas; // || this.meters.lastMeasureGas;
 			this.meters.lastMeterGas = meterGas; // || this.meters.lastMeterGas;
-			this.meters.lastMeterGasTm = meterGasTm || this.meters.lastMeterGasTm;
+			this.meters.lastMeterGasTm = meterGasTm; // || this.meters.lastMeterGasTm;
 			this.meters.lastMeasurePower = measurePower; // || this.meters.lastMeasurePower;
-			this.meters.lastMeasurePowerAvg = measurePowerAvg; // || this.meters.lastMeasurePowerAvg;
+			this.meters.lastMeasurePowerAvg = measurePowerAvg;// || this.meters.lastMeasurePowerAvg;
 			this.meters.lastMeterPower = meterPower; // || this.meters.lastMeterPower;
 			this.meters.lastMeterPowerPeak = meterPowerPeak; // || this.meters.lastMeterPowerPeak;
 			this.meters.lastMeterPowerOffpeak = meterPowerOffpeak; // || this.meters.lastMeterPowerOffpeak;
 			this.meters.lastMeterPowerPeakProduced = meterPowerPeakProduced; // || this.meters.lastMeterPowerPeakProduced;
 			this.meters.lastMeterPowerOffpeakProduced = meterPowerOffpeakProduced; // || this.meters.lastMeterPowerOffpeakProduced;
-			this.meters.lastMeterPowerTm = meterPowerTm || this.meters.lastMeterPowerTm;
-			this.meters.lastOffpeak = offPeak;
+			this.meters.lastMeterPowerTm = meterPowerTm; // || this.meters.lastMeterPowerTm;
+			this.meters.lastOffpeak = offPeak; // || this.meters.lastOffpeak;
 			// update the device state
 			// this.log(this.meters);
 			this.updateDeviceState();
