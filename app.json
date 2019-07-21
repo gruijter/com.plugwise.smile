@@ -13,7 +13,7 @@
 		"en": [ "dsmr", "p1", "plugwise", "smile", "power", "water", "gas" ],
 		"nl": [ "dsmr", "p1", "plugwise", "smile", "power", "water", "gas" ]
 	},
-	"version": "3.0.1",
+	"version": "3.0.2",
 	"sdk": 2,
   "compatibility": ">= 1.5",
   "author": {
@@ -105,21 +105,21 @@
         "meter_power": {
   				"title": {
   					"en": "Power meter total",
-  					"nl": "Stroommeter totaal"
+  					"nl": "Energie totaal"
           },
           "decimals": 4
         },
   			"meter_power.peak": {
   				"title": {
   					"en": "Power meter peak",
-  					"nl": "Stroommeter piek"
+  					"nl": "Energie piek"
   				},
           "decimals": 4
         },
         "meter_power.offPeak": {
           "title": {
             "en": "Power meter off-peak",
-            "nl": "Stroommeter dal"
+            "nl": "Energie dal"
           },
           "decimals": 4
         },
