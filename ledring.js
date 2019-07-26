@@ -36,9 +36,11 @@ class Ledring {
 				rpm: 10,	// rotations per minute
 			},
 			frames: this.framesPower,
+			priority: 'INFORMATIVE',
 			duration: false,
 		});
-		this.registerScreensaver(screensaver);
+		this.registerScreensaver(screensaver)
+			.catch(error => this.log(error));
 	}
 
 	async registerScreensaver(screensaver) {
@@ -62,9 +64,9 @@ class Ledring {
 			// Homey V2 racing issues resolver
 			await setTimeoutPromise(1 * 1000, 'waiting is done');
 			this.animation.updateFrames(this.framesPower);
-			Homey.app.log(`${screensaver} ledring screensaver ready!`);
+			this.log(`${screensaver} ledring screensaver ready!`);
 		} catch (error) {
-			Homey.app.log(error);
+			this.log(error);
 		}
 	}
 
@@ -86,7 +88,7 @@ class Ledring {
 				if (deviceSettings.ledring_production_limit === 0) {	// ignore change when limit setting is 0
 					return;
 				}
-				limit = -limit;
+				limit = -((24 * measurepower) / deviceSettings.ledring_production_limit).toFixed(0);
 				if (limit > 24) { limit = 24; }
 				for (let pixel = 0; pixel < 24; pixel += 1) {
 					if (pixel < limit) {
@@ -97,7 +99,7 @@ class Ledring {
 			}
 			this.animation.updateFrames(this.framesPower);
 		} catch (error) {
-			Homey.app.log(error);
+			this.log(error);
 		}
 	}
 
