@@ -18,11 +18,11 @@ if (!homeyIsV2) {
 
 function testSettings() {
 	// variables
-	const host = $('#host').val();
-	if (host !== '') {
+	const smileId = $('#password').val();
+	if (smileId !== '') {
 		const data = {
-			smileIp: host,
-			smileId: $('#password').val(),
+			smileIp: $('#host').val(),
+			smileId: $('#password').val().toLowerCase(),
 			// includeConsumption: $('#includeConsumption').prop('checked'),
 			includeProduction: $('#includeProduction').prop('checked'),
 			includeOffPeak: $('#includeOffPeak').prop('checked'),

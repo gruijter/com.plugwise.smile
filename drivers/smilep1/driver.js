@@ -38,23 +38,20 @@ class SmileP1Driver extends Homey.Driver {
 			try {
 				this.log('save button pressed in frontend');
 				const host = data.smileIp.split(':')[0];
-				const port = Number(data.smileIp.split(':')[1]) || 80;
+				const port = Number(data.smileIp.split(':')[1]);
 				const options = {
 					id: data.smileId,
-					host,
-					port,
+					host: (host === '') ? undefined : host,
+					port: (port === '') ? undefined : port,
 				};
 				const smile = new this.Smile(options);
-				await smile.getMeterReadings()
-					.catch((error) => {
-						callback(error);
-					});
+				await smile.login();
 				const device = {
 					name: `Smile_${data.smileId}`,
 					data: { id: data.smileId },
 					settings: {
-						smileIp: host,
-						port,
+						smileIp: smile.host,
+						port: smile.port,
 						smileId: data.smileId,
 						ledring_usage_limit: 3000,
 						ledring_production_limit: 3000,
@@ -91,6 +88,7 @@ class SmileP1Driver extends Homey.Driver {
 				this.error('Pair error', error);
 				if (error.code === 'EHOSTUNREACH') {
 					callback(Error('Incorrect IP address'));
+					return;
 				}
 				callback(error);
 			}
@@ -105,13 +103,10 @@ class SmileP1Driver extends Homey.Driver {
 			const meterGasTm = readings.gtm || this.meters.lastMeterGasTm; // gas_meter_timestamp
 			let measureGas = this.meters.lastMeasureGas;
 			// constructed gas readings
-			const meterGasChanged = (this.meters.lastMeterGas !== meterGas) && (this.meters.lastMeterGasTm !== 0);
 			const meterGasTmChanged = (meterGasTm !== this.meters.lastMeterGasTm) && (this.meters.lastMeterGasTm !== 0);
-			if (meterGasChanged || meterGasTmChanged) {
+			if (meterGasTmChanged) {
 				const passedHours = (meterGasTm - this.meters.lastMeterGasTm) / 3600000;
-				if (passedHours > 0) {
-					measureGas = Math.round((meterGas - this.meters.lastMeterGas) / passedHours) / 1000; // gas_interval_meter
-				}
+				measureGas = Math.round(1000 * (meterGas - this.meters.lastMeterGas) / passedHours) / 1000; // gas_interval_meter
 			}
 			// electricity readings from device
 			const meterPowerOffpeakProduced = readings.n1 || this.meters.lastMeterPowerPeakProduced;

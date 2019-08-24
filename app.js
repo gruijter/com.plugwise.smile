@@ -26,7 +26,6 @@ class MyApp extends Homey.App {
 
 	onInit() {
 		this.log('Plugwise Smile P1 App is running!');
-		// this.ledring = new Ledring();
 		this.logger = new Logger();	// [logName] [, logLength]
 
 		// register some listeners
@@ -63,15 +62,15 @@ class MyApp extends Homey.App {
 
 	// ===================================================================
 	// testing stuff here
-	async testSmile() {
-		try {
-			// get the meter values
-			const meter = await this.smile.getMeter();
-			this.log(meter);
-		}	catch (error) {
-			this.log(error);
-		}
-	}
+	// async testSmile() {
+	// 	try {
+	// 		// get the meter values
+	// 		const meter = await this.smile.getMeter();
+	// 		this.log(meter);
+	// 	}	catch (error) {
+	// 		this.log(error);
+	// 	}
+	// }
 
 }
 

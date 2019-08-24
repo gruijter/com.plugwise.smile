@@ -1,14 +1,14 @@
 {
 	"pair": {
 		"title": "Add Smile P1",
-		"instructions": "Enter the IP address and ID of the Smile P1. De-select any meters that you do not need. The main power is always included. Note: It is not possible to add meters afterwards without deleting the device first!",
+		"instructions": "Enter the ID of the Smile P1. If you do not enter an IP address Homey will try auto-discovery. De-select any meters that you do not need. The main power is always included. Note: It is not possible to add meters afterwards without deleting the device first!",
 		"includeMeters": "Include meters",
 		"includeProduction": "Power production",
 		"includeOffPeak": "Off-peak",
 		"includeGas": "Gas",
 		"host": "IP address",
 		"password": "Smile ID",
-		"required": "The IP address and SmileId are required",
+		"required": "The Smile ID is required",
 		"testSettings": "Save",
 		"success": "Success!"
   },
@@ -17,7 +17,7 @@
 		"tab1": {
 			"title": "Instructions",
 			"addDeviceTitle": "Add a new device",
-			"addDeviceInstructions": "Add a new device via the Homey tab `Devices`. On request enter the fixed IP address and Smile ID. The ID can be found printed on the device, or can be found in the original app from Plugwise. The polling interval can be changed in the device settings.",
+			"addDeviceInstructions": "Add a new device via the Homey tab `Devices`. On request enter the Smile ID. The ID can be found printed on the device, or can be found in the original app from Plugwise. If you do not enter an IP address Homey will try auto-discovery. The polling interval can be changed in the device settings.",
 			"ledringTitle": "Enable LED ring",
 			"ledringInstructions": "The Homey LED ring can show you how much energy you are using and producing. Go to the Homey settings `LED Ring` and select the `Plugwise Smile P1 Power` screensaver."
 		},
