@@ -105,7 +105,7 @@ class SmileP1Driver extends Homey.Driver {
 			// constructed gas readings
 			const meterGasTmChanged = (meterGasTm !== this.meters.lastMeterGasTm) && (this.meters.lastMeterGasTm !== 0);
 			if (meterGasTmChanged) {
-				const passedHours = (meterGasTm - this.meters.lastMeterGasTm) / 3600000;
+				const passedHours = (meterGasTm - this.meters.lastMeterGasTm) / 3600;	// timestamp is in seconds
 				measureGas = Math.round(1000 * (meterGas - this.meters.lastMeterGas) / passedHours) / 1000; // gas_interval_meter
 			}
 			// electricity readings from device

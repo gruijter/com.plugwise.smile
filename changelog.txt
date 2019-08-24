@@ -1,5 +1,5 @@
 
-v3.0.4  2019.08.24 Added autodiscover during pairing. Gas usage fix.
+v3.0.4  2019.08.24 SmileP1 package v 1.2.0. Added autodiscover during pairing. Gas usage fix.
 v3.0.3  2019.07.26 Ledring production fix.
 v3.0.2  2019.07.21 SmileP1 package v 1.1.0. Bugfixes and optimizations.
 v3.0.1  2019.06.14 SmileP1 package v 1.0.7. getMeterReadings optimized for V2 firmware. Meters accuracy extended to max 4 decimals.
