@@ -102,7 +102,7 @@
         "meter_power.producedOffPeak"
       ],
       "energy": {
-        "generator": true
+        "cumulative": true
       },
       "capabilitiesOptions": {
         "meter_power": {
