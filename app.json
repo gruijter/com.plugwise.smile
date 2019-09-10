@@ -13,7 +13,7 @@
 		"en": [ "dsmr", "p1", "plugwise", "smile", "power", "water", "gas" ],
 		"nl": [ "dsmr", "p1", "plugwise", "smile", "power", "water", "gas" ]
 	},
-	"version": "3.0.4",
+	"version": "3.0.5",
 	"sdk": 2,
   "compatibility": ">= 1.5",
   "author": {
@@ -101,6 +101,9 @@
         "meter_power.producedPeak",
         "meter_power.producedOffPeak"
       ],
+      "energy": {
+        "generator": true
+      },
       "capabilitiesOptions": {
         "meter_power": {
   				"title": {

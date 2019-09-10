@@ -1,4 +1,4 @@
-
+v3.0.5  2019.09.10 SmileP1 package v 1.3.0. Added Energy support for Homey V3. Negative watts (production to grid) is an issue in V3.0.0.RC8. Athom needs to fix that!
 v3.0.4  2019.08.24 SmileP1 package v 1.2.0. Added autodiscover during pairing. Gas usage fix.
 v3.0.3  2019.07.26 Ledring production fix.
 v3.0.2  2019.07.21 SmileP1 package v 1.1.0. Bugfixes and optimizations.
