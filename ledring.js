@@ -1,5 +1,5 @@
 /*
-Copyright 2016 - 2019, Robin de Gruijter (gruijter@hotmail.com)
+Copyright 2016 - 2020, Robin de Gruijter (gruijter@hotmail.com)
 
 This file is part of com.plugwise.smile.
 
@@ -40,7 +40,7 @@ class Ledring {
 			duration: false,
 		});
 		this.registerScreensaver(screensaver)
-			.catch(error => this.log(error));
+			.catch((error) => this.log(error));
 	}
 
 	async registerScreensaver(screensaver) {

@@ -29,17 +29,21 @@ function testSettings() {
 			includeGas: $('#includeGas').prop('checked'),
 		};
 		// Continue to back-end, pass along data
+		Homey.showLoadingOverlay();
 		Homey.emit('validate', data, (error, result) => {
 			if (error) {
+				Homey.hideLoadingOverlay();
 				Homey.alert(error.message, 'error');
 			} else {
-				Homey.alert(`${__('pair.success')} ${result}`, 'info');
 				const device = JSON.parse(result);
 				Homey.addDevice(device, (err, res) => {
+					Homey.hideLoadingOverlay();
 					if (err) { Homey.alert(err, 'error'); return; }
-					setTimeout(() => {
-						Homey.done();
-					}, 5000);
+					Homey.alert(`${__('pair.success')} ${result}`, 'info');
+					Homey.done();
+					// setTimeout(() => {
+					// 	Homey.done();
+					// }, 1000);
 				});
 			}
 		});

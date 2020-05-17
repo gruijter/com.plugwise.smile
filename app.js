@@ -1,5 +1,5 @@
 /*
-Copyright 2016 - 2019, Robin de Gruijter (gruijter@hotmail.com)
+Copyright 2016 - 2020, Robin de Gruijter (gruijter@hotmail.com)
 
 This file is part of com.plugwise.smile.
 
@@ -25,8 +25,9 @@ const Logger = require('./captureLogs.js');
 class MyApp extends Homey.App {
 
 	onInit() {
-		this.log('Plugwise Smile P1 App is running!');
-		this.logger = new Logger();	// [logName] [, logLength]
+		this.log('Plugwise Smile P1 app is running!');
+
+		if (!this.logger) this.logger = new Logger('log', 200);
 
 		// register some listeners
 		process.on('unhandledRejection', (error) => {

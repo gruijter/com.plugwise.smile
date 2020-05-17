@@ -13,9 +13,9 @@
 		"en": [ "dsmr", "p1", "plugwise", "smile", "power", "water", "gas" ],
 		"nl": [ "dsmr", "p1", "plugwise", "smile", "power", "water", "gas" ]
 	},
-	"version": "3.0.5",
+	"version": "3.0.6",
 	"sdk": 2,
-  "compatibility": ">= 1.5",
+  "compatibility": ">= 2.0",
   "author": {
     "name": "Robin Gruijter",
     "email": "gruijter@hotmail.com"
@@ -39,8 +39,8 @@
     "small": "./assets/images/small.jpg"
   },
 
-  "category": ["tools","appliances", "energy"],
-  "gtin": ["8718469270064"],
+  "category": ["energy", "tools","appliances"],
+  "gtin": ["8718469270064", "8718469272204"],
   "capabilities": {
     "meter_offPeak": {
       "type": "boolean",
@@ -55,7 +55,7 @@
       "getable": true,
       "setable": false,
       "insights": true,
-      "icon": "./drivers/smilep1/assets/images/offPeak_icon.svg"
+      "icon": "./drivers/smilep1/assets/offPeak_icon.svg"
     },
     "measure_gas": {
       "type": "number",
@@ -75,7 +75,7 @@
       "getable": true,
       "setable": false,
       "insights": true,
-      "icon": "./drivers/smilep1/assets/images/gas_icon.svg"
+      "icon": "./drivers/smilep1/assets/gas_icon.svg"
     }
   },
   "drivers": [
@@ -86,8 +86,8 @@
         "nl": "SmileP1"
       },
       "images": {
-        "large": "./drivers/smilep1/assets/images/large.jpg",
-        "small": "./drivers/smilep1/assets/images/small.jpg"
+        "large": "./drivers/smilep1/assets/images/large.png",
+        "small": "./drivers/smilep1/assets/images/small.png"
       },
       "class": "sensor",
       "capabilities": [
@@ -140,49 +140,6 @@
           },
           "decimals": 4
         }
-      },
-
-      "mobile": {
-        "components": [
-          {
-            "id": "icon",
-            "capabilities": [ ]
-          },
-          {
-            "id": "sensor",
-            "capabilities": [
-              "measure_power",
-              "meter_offPeak",
-              "measure_gas",
-              "meter_gas",
-              "meter_power",
-              "meter_power.peak",
-              "meter_power.offPeak",
-              "meter_power.producedPeak",
-              "meter_power.producedOffPeak"
-            ],
-            "options": {
-              "icons": {
-                "measure_gas": "./drivers/smilep1/assets/images/gas_icon.svg",
-                "meter_offPeak": "./drivers/smilep1/assets/images/offPeak_icon.svg"
-              },
-              "meter_offPeak":{
-                "noblink": true,
-                "invert": false,
-                "label": {
-                  "true": {
-                    "en": "true",
-                    "nl": "ja"
-                  },
-                  "false": {
-                    "en": "false",
-                    "nl": "nee"
-                  }
-                }
-              }
-            }
-          }
-        ]
       },
 
       "pair": [

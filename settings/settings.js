@@ -9,9 +9,15 @@ function updateLogs() {
 		Homey.api('GET', 'getlogs/', null, (err, result) => {
 			if (!err) {
 				let lines = '';
-				for (let i = (result.length - 1); i >= 0; i -= 1) {
-					lines += `${result[i]}<br />`;
-				}
+				result
+					.reverse()
+					.forEach((line) => {
+						const logLine = line
+							.replace(' [MyApp]', '')
+							.replace(' [ManagerDrivers] [smilep1]', '');
+						lines += `${logLine}<br />`;
+
+					});
 				displayLogs(lines);
 			} else {
 				displayLogs(err);
@@ -21,6 +27,7 @@ function updateLogs() {
 		displayLogs(e);
 	}
 }
+
 
 function deleteLogs() {
 	Homey.confirm(Homey.__('settings.tab2.deleteWarning'), 'warning', (error, result) => {

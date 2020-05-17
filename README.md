@@ -1,7 +1,8 @@
 # Plugwise smile P1 #
 
-Homey app to integrate Plugwise Smile P1 energy meter. A direct connection over
-IP is used, so there is no need for the Plugwise Stretch.
+Homey app to interface DSMR P1 smart meters via a Plugwise Smile P1.
+
+A direct connection over IP is used, so there is no need for the Plugwise Stretch.
 
 The app logs and provides flow cards for the following data:
 - Actual power usage/production (W, 10s interval)
@@ -27,12 +28,9 @@ The polling interval can be changed in the device settings.
 If you like the app you can show your appreciation by posting it in the [forum],
 and if you really like it you can buy me a beer.
 
-[![Paypal donate][pp-donate-image]][pp-donate-link]
 ===============================================================================
 
 Version changelog: [changelog.txt]
 
 [forum]: https://community.athom.com/t/8012
-[pp-donate-link]: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=M9M847YNL7SB2
-[pp-donate-image]: https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif
 [changelog.txt]: https://github.com/gruijter/com.plugwise.smile/blob/master/changelog.txt
