@@ -1,5 +1,8 @@
 {
   "3.0.6": {
     "en": "SmileP1 package v 1.4.0. Updated icons and improved pairing screen."
+  },
+  "3.1.0": {
+    "en": "Fix Homey V5 compatibility."
   }
 }
