@@ -25,8 +25,8 @@ const util = require('util');
 const setTimeoutPromise = util.promisify(setTimeout);
 
 class Ledring {
-	constructor(screensaver) {
-		this.log = Homey.app.log;
+	constructor(opts) {
+		this.log = opts.homey.log;
 		this.framesPower = [];
 		this.framePower = [];
 		this.animation = new Homey.LedringAnimation({
@@ -39,7 +39,7 @@ class Ledring {
 			priority: 'INFORMATIVE',
 			duration: false,
 		});
-		this.registerScreensaver(screensaver)
+		this.registerScreensaver(opts.screensaver)
 			.catch((error) => this.log(error));
 	}
 

@@ -30,7 +30,7 @@ class SmileP1Driver extends Homey.Driver {
 	onInit() {
 		this.log('entering SmileP1 driver');
 		this.Smile = SmileP1;
-		this.ledring = new Ledring('smile_power');
+		this.ledring = new Ledring({ screensaver: 'smile_power', homey: this });
 	}
 
 	onPair(socket) {

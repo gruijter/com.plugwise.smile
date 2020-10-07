@@ -27,7 +27,7 @@ class MyApp extends Homey.App {
 	onInit() {
 		this.log('Plugwise Smile P1 app is running!');
 
-		if (!this.logger) this.logger = new Logger('log', 200);
+		if (!this.logger) this.logger = new Logger({ homey: this, length: 200 });
 
 		// register some listeners
 		process.on('unhandledRejection', (error) => {
