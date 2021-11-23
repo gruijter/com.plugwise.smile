@@ -4,8 +4,8 @@ A direct connection over IP is used, so there is no need for the Plugwise Stretc
 
 The app logs and provides flow cards for the following data:
 - Actual power usage/production (W, 10s interval)
-- Totalized power meter (kWh)
-- All individual power meters (kWh)
+- Totalized energy meter (kWh)
+- All individual energy meters (kWh)
 - Recent gas usage (m3, of the previous hour)
 - Gas meter (m3)
 - Tariff change (off-peak, true or false)

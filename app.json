@@ -1,21 +1,37 @@
 {
+  "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
   "id": "com.plugwise.smile",
   "name": {
     "en": "Plugwise Smile P1",
     "nl": "Plugwise Smile P1"
   },
-
   "description": {
     "en": "Imports data from the Plugwise Smile P1 energy meter",
     "nl": "Leest data van de Plugwise Smile P1 energie meter"
   },
-	"tags": {
-		"en": [ "dsmr", "p1", "plugwise", "smile", "power", "water", "gas" ],
-		"nl": [ "dsmr", "p1", "plugwise", "smile", "power", "water", "gas" ]
-	},
-	"version": "3.1.0",
-	"sdk": 2,
-  "compatibility": ">= 2.0",
+  "tags": {
+    "en": [
+      "dsmr",
+      "p1",
+      "plugwise",
+      "smile",
+      "power",
+      "water",
+      "gas"
+    ],
+    "nl": [
+      "dsmr",
+      "p1",
+      "plugwise",
+      "smile",
+      "power",
+      "water",
+      "gas"
+    ]
+  },
+  "version": "4.0.0",
+  "sdk": 3,
+  "compatibility": ">= 5.0",
   "author": {
     "name": "Robin Gruijter",
     "email": "gruijter@hotmail.com"
@@ -33,54 +49,126 @@
     "url": "https://github.com/gruijter/com.plugwise.smile/issues"
   },
   "homeyCommunityTopicId": 8012,
-
   "images": {
     "large": "./assets/images/large.jpg",
     "small": "./assets/images/small.jpg"
   },
-
-  "category": ["energy", "tools","appliances"],
-  "gtin": ["8718469270064", "8718469272204"],
-  "capabilities": {
-    "meter_offPeak": {
-      "type": "boolean",
-      "title": {
-        "en": "Off-peak",
-        "nl": "Laag tarief"
-      },
-      "desc": {
-        "en": "Is off-peak tarriff active?",
-        "nl": "Is laag tarief actief?"
-      },
-      "getable": true,
-      "setable": false,
-      "insights": true,
-      "icon": "./drivers/smilep1/assets/offPeak_icon.svg"
+  "category": [
+    "energy",
+    "tools",
+    "appliances"
+  ],
+  "gtin": [
+    "8718469270064",
+    "8718469272204"
+  ],
+  "permissions": [
+    "homey:manager:ledring"
+  ],
+  "brandColor": "#00ccff",
+  "platforms": [
+    "local",
+    "local"
+  ],
+  "api": {
+    "getLogs": {
+      "method": "get",
+      "path": "/getlogs"
     },
-    "measure_gas": {
-      "type": "number",
-      "title": {
-        "en": "Gas",
-        "nl": "Gas"
-      },
-      "desc": {
-        "en": "Gas usage (previous hour)",
-        "nl": "Gasverbruik (vorige uur)"
-      },
-      "decimals": 4,
-      "units": {
-        "en": "m\u00B3",
-        "nl": "m\u00B3"
-      },
-      "getable": true,
-      "setable": false,
-      "insights": true,
-      "icon": "./drivers/smilep1/assets/gas_icon.svg"
+    "deleteLogs": {
+      "method": "get",
+      "path": "/deletelogs"
     }
+  },
+  "flow": {
+    "triggers": [
+      {
+        "id": "power_changed",
+        "title": {
+          "en": "Power delta",
+          "nl": "Stroomverbruik delta"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=smilep1"
+          }
+        ],
+        "tokens": [
+          {
+            "name": "power",
+            "type": "number",
+            "title": {
+              "en": "Watt",
+              "nl": "Watt"
+            },
+            "example": 850
+          },
+          {
+            "name": "power_delta",
+            "type": "number",
+            "title": {
+              "en": "+- W",
+              "nl": "+- W"
+            },
+            "example": 18
+          }
+        ]
+      },
+      {
+        "id": "tariff_changed",
+        "title": {
+          "en": "Tariff has changed",
+          "nl": "Tarief is gewijzigd"
+        },
+        "titleFormatted": {
+          "en": "Tariff has changed",
+          "nl": "Tarief is gewijzigd"
+        },
+        "tokens": [
+          {
+            "name": "tariff",
+            "type": "boolean",
+            "title": {
+              "en": "off-peak",
+              "nl": "dal"
+            },
+            "example": false
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=smilep1"
+          }
+        ]
+      }
+    ],
+    "conditions": [
+      {
+        "id": "is_offPeak",
+        "title": {
+          "en": "Tariff !{{is|isn't}} off peak",
+          "nl": "Tarief !{{is|is niet}} dal"
+        },
+        "titleFormatted": {
+          "en": "Tariff !{{is|isn't}} off peak",
+          "nl": "Tarief !{{is|is niet}} dal"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=smilep1"
+          }
+        ]
+      }
+    ]
   },
   "drivers": [
     {
-      "id": "smilep1",
       "name": {
         "en": "SmileP1",
         "nl": "SmileP1"
@@ -106,17 +194,17 @@
       },
       "capabilitiesOptions": {
         "meter_power": {
-  				"title": {
-  					"en": "Power meter total",
-  					"nl": "Energie totaal"
+          "title": {
+            "en": "Power meter total",
+            "nl": "Energie totaal"
           },
           "decimals": 4
         },
-  			"meter_power.peak": {
-  				"title": {
-  					"en": "Power meter peak",
-  					"nl": "Energie piek"
-  				},
+        "meter_power.peak": {
+          "title": {
+            "en": "Power meter peak",
+            "nl": "Energie piek"
+          },
           "decimals": 4
         },
         "meter_power.offPeak": {
@@ -141,21 +229,20 @@
           "decimals": 4
         }
       },
-
       "pair": [
-          {
+        {
           "id": "pair"
         }
       ],
       "settings": [
-				{
-					"type": "group",
-					"label": {
-						"en": "Device information",
-						"nl": "Device informatie"
-					},
-					"children": [
-						{
+        {
+          "type": "group",
+          "label": {
+            "en": "Device information",
+            "nl": "Device informatie"
+          },
+          "children": [
+            {
               "id": "smileId",
               "type": "label",
               "label": {
@@ -164,20 +251,20 @@
               },
               "value": "bcdfghjk"
             }
-					]
-				},
+          ]
+        },
         {
           "type": "group",
           "label": {
-						"en": "Connection",
-						"nl": "Verbinding"
+            "en": "Connection",
+            "nl": "Verbinding"
           },
           "children": [
             {
               "id": "smileIp",
               "type": "text",
               "label": {
-								"en": "URL or IP address",
+                "en": "URL or IP address",
                 "nl": "URL of IP adres"
               },
               "value": "0.0.0.0"
@@ -186,148 +273,103 @@
               "id": "pollingInterval",
               "type": "number",
               "label": {
-								"en": "Polling interval (s)",
+                "en": "Polling interval (s)",
                 "nl": "Polling interval (s)"
               },
-              "attr": { "min": 10 },
+              "attr": {
+                "min": 10
+              },
               "value": 10
             }
-					]
-				},
-				{
-					"type": "group",
-					"label": {
-						"en": "Ledring",
-						"nl": "Ledring"
-					},
-					"children": [
-						{
-							"id": "ledring_usage_limit",
-							"type": "number",
-							"label": {
-								"en": "Max consumption (W)",
-								"nl": "Max gebruik (W)"
-							},
-							"attr": { "min": 0 },
-							"value": 3000
-						},
-						{
-							"id": "ledring_production_limit",
-							"type": "number",
-							"label": {
-								"en": "Max production (W)",
-								"nl": "Max productie (W)"
-							},
-							"attr": { "min": 0 },
-							"value": 3000
-						}
-					]
-				}
-      ]
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "Ledring",
+            "nl": "Ledring"
+          },
+          "children": [
+            {
+              "id": "ledring_usage_limit",
+              "type": "number",
+              "label": {
+                "en": "Max consumption (W)",
+                "nl": "Max gebruik (W)"
+              },
+              "attr": {
+                "min": 0
+              },
+              "value": 3000
+            },
+            {
+              "id": "ledring_production_limit",
+              "type": "number",
+              "label": {
+                "en": "Max production (W)",
+                "nl": "Max productie (W)"
+              },
+              "attr": {
+                "min": 0
+              },
+              "value": 3000
+            }
+          ]
+        }
+      ],
+      "connectivity": [
+        "lan"
+      ],
+      "platforms": [
+        "local"
+      ],
+      "id": "smilep1"
     }
   ],
-
-  "flow":	{
-    "triggers":[
-      {
-        "id":"tariff_changed",
-        "title": {
-          "en":"Tariff has changed",
-          "nl":"Tarief is gewijzigd"
-        },
-        "args": [
-          {
-            "name": "Smile",
-            "type": "device",
-            "filter": "driver_id=smilep1",
-            "placeholder": {
-              "en": "Which device",
-              "nl": "Welk apparaat"
-             }
-          }
-        ],
-        "tokens":[
-          {
-            "name":"tariff",
-            "type": "boolean",
-            "title": {
-              "en":"off-peak",
-              "nl":"dal"
-            },
-            "example" : false
-          }
-        ]
+  "capabilities": {
+    "measure_gas": {
+      "type": "number",
+      "title": {
+        "en": "Gas",
+        "nl": "Gas"
       },
-      {
-        "id":"power_changed",
-        "title": {
-          "en":"Power use changed",
-          "nl":"Stroomverbruik gewijzigd"
-        },
-        "args": [
-          {
-            "name": "Smile",
-            "type": "device",
-            "filter": "driver_id=smilep1",
-            "placeholder": {
-              "en": "Which device",
-              "nl": "Welk apparaat"
-             }
-          }
-        ],
-        "tokens":[
-          {
-            "name":"power",
-            "type": "number",
-            "title": {
-              "en":"Watt",
-              "nl":"Watt"
-            },
-            "example" : 850
-          },
-          {
-            "name":"power_delta",
-            "type": "number",
-            "title": {
-              "en":"+- W",
-              "nl":"+- W"
-            },
-          "example" : 18
-          }
-        ]
-      }
-    ],
-    "conditions": [
-      {
-        "id": "offPeak",
-        "title": {
-          "en": "Tariff !{{is|isn't}} off-peak",
-          "nl": "Tarief !{{is|is niet}} dal"
-        },
-        "args": [
-          {
-            "name": "Smile",
-            "type": "device",
-            "filter": "driver_id=smilep1",
-            "placeholder": {
-              "en": "Which device",
-              "nl": "Welk apparaat"
-             }
-          }
-        ]
-      }
-    ]
+      "desc": {
+        "en": "Gas usage (previous hour)",
+        "nl": "Gasverbruik (vorige uur)"
+      },
+      "decimals": 4,
+      "units": {
+        "en": "m³",
+        "nl": "m³"
+      },
+      "getable": true,
+      "setable": false,
+      "insights": true,
+      "icon": "./drivers/smilep1/assets/gas_icon.svg"
+    },
+    "meter_offPeak": {
+      "type": "boolean",
+      "title": {
+        "en": "Off peak",
+        "nl": "Laag tarief"
+      },
+      "desc": {
+        "en": "Is off peak tarriff active?",
+        "nl": "Is laag tarief actief?"
+      },
+      "getable": true,
+      "setable": false,
+      "insights": true,
+      "icon": "./drivers/smilep1/assets/offPeak_icon.svg"
+    }
   },
   "screensavers": [
-		{
-			"name": "smile_power",
-			"title": {
-				"en": "Plugwise Smile P1 Power",
-				"nl": "Plugwise Smile P1 Energie"
-			}
-		}
-  ],
-  "permissions": [
-    "homey:manager:ledring"
+    {
+      "name": "smile_power",
+      "title": {
+        "en": "Plugwise Smile P1 Power",
+        "nl": "Plugwise Smile P1 Energie"
+      }
+    }
   ]
 }

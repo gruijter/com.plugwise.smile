@@ -14,7 +14,7 @@ function updateLogs() {
 					.forEach((line) => {
 						const logLine = line
 							.replace(' [MyApp]', '')
-							.replace(' [ManagerDrivers] [smilep1]', '');
+							.replace(' [ManagerDrivers] [Driver:', '[');
 						lines += `${logLine}<br />`;
 
 					});
@@ -27,7 +27,6 @@ function updateLogs() {
 		displayLogs(e);
 	}
 }
-
 
 function deleteLogs() {
 	Homey.confirm(Homey.__('settings.tab2.deleteWarning'), 'warning', (error, result) => {

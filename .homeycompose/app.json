@@ -1,0 +1,82 @@
+{
+  "id": "com.plugwise.smile",
+  "name": {
+    "en": "Plugwise Smile P1",
+    "nl": "Plugwise Smile P1"
+  },
+  "description": {
+    "en": "Imports data from the Plugwise Smile P1 energy meter",
+    "nl": "Leest data van de Plugwise Smile P1 energie meter"
+  },
+  "tags": {
+    "en": [
+      "dsmr",
+      "p1",
+      "plugwise",
+      "smile",
+      "power",
+      "water",
+      "gas"
+    ],
+    "nl": [
+      "dsmr",
+      "p1",
+      "plugwise",
+      "smile",
+      "power",
+      "water",
+      "gas"
+    ]
+  },
+  "version": "4.0.0",
+  "sdk": 3,
+  "compatibility": ">= 5.0",
+  "author": {
+    "name": "Robin Gruijter",
+    "email": "gruijter@hotmail.com"
+  },
+  "copyright": "Robin de Gruijter (gruijter@hotmail.com)",
+  "license": " GPL-3.0-or-later",
+  "contributing": {
+    "donate": {
+      "paypal": {
+        "username": "gruijter"
+      }
+    }
+  },
+  "bugs": {
+    "url": "https://github.com/gruijter/com.plugwise.smile/issues"
+  },
+  "homeyCommunityTopicId": 8012,
+  "images": {
+    "large": "./assets/images/large.jpg",
+    "small": "./assets/images/small.jpg"
+  },
+  "category": [
+    "energy",
+    "tools",
+    "appliances"
+  ],
+  "gtin": [
+    "8718469270064",
+    "8718469272204"
+  ],
+  "permissions": [
+    "homey:manager:ledring"
+  ],
+  "brandColor": "#00ccff",
+  "platforms": [
+    "local",
+    "local"
+  ],
+  "api": {
+    "getLogs": {
+      "method": "get",
+      "path": "/getlogs"
+    },
+    "deleteLogs": {
+      "method": "get",
+      "path": "/deletelogs"
+    }
+  }
+}

@@ -4,5 +4,8 @@
   },
   "3.1.0": {
     "en": "Fix Homey V5 compatibility."
+  },
+  "4.0.0": {
+    "en": "Rewrite to SDK3 and Homey Compose. Fixed offPeak state after app restart. Fixed several 0-value bugs. Http timeout depending on poll time. package Smilep1@1.5.0. Ledring code updated. NL readme added."
   }
 }

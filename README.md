@@ -26,7 +26,7 @@ The polling interval can be changed in the device settings.
 
 ##### Donate: #####
 If you like the app you can show your appreciation by posting it in the [forum],
-and if you really like it you can buy me a beer.
+and if you really like it you can [buy me a beer](https://paypal.me/gruijter).
 
 ===============================================================================
 
