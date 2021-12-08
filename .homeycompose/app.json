@@ -28,7 +28,7 @@
       "gas"
     ]
   },
-  "version": "4.0.0",
+  "version": "4.1.0",
   "sdk": 3,
   "compatibility": ">= 5.0",
   "author": {

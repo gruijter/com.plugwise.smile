@@ -44,6 +44,7 @@ class SmileP1Device extends Device {
 				host: settings.smileIp,
 				port: Number(settings.port) || 80,
 				timeout: (settings.pollingInterval * 900),
+				reversed: settings.reversed,
 			};
 			this.smile = new SmileP1(options);
 
@@ -212,7 +213,7 @@ class SmileP1Device extends Device {
 				meterPowerIntervalTm = meterPowerTm;
 				measurePowerAvg = measurePower;
 			}
-			if ((meterPowerTm - meterPowerIntervalTm) >= 120) {
+			if ((meterPowerTm - meterPowerIntervalTm) >= 60) {
 				measurePowerAvg = Math.round((3600000 / (meterPowerTm - meterPowerIntervalTm)) * (meterPower - meterPowerInterval));
 				meterPowerInterval = meterPower;
 				meterPowerIntervalTm = meterPowerTm;
