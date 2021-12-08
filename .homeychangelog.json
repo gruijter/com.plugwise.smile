@@ -7,5 +7,8 @@
   },
   "4.0.0": {
     "en": "Rewrite to SDK3 and Homey Compose. Fixed offPeak state after app restart. Fixed several 0-value bugs. Http timeout depending on poll time. package Smilep1@1.5.0. Ledring code updated. NL readme added."
+  },
+  "4.1.0": {
+    "en": "Added support for Belgian P1 (reversed peak-offPeak). smilep1@1.6.1."
   }
 }
