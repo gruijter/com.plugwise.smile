@@ -10,5 +10,8 @@
   },
   "4.1.0": {
     "en": "Added support for Belgian P1 (reversed peak-offPeak). smilep1@1.6.1."
+  },
+  "4.2.0": {
+    "en": "Fix tariff change flow trigger. Added filter unrealistic values option."
   }
 }

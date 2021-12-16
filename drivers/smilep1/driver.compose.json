@@ -123,6 +123,19 @@
             "nl": "Zet op omdraaien voor Belgische P1 meters"
           },
           "value": false
+        },
+        {
+          "id": "filterReadings",
+          "type": "checkbox",
+          "label": {
+            "en": "Filter readings",
+            "nl": "Filter meetwaarden"
+          },
+          "hint": {
+            "en": "Ignore unrealistic meter readings",
+            "nl": "Negeer onrealistische meter waarden"
+          },
+          "value": false
         }
       ]
     },

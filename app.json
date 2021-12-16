@@ -29,7 +29,7 @@
       "gas"
     ]
   },
-  "version": "4.1.0",
+  "version": "4.2.0",
   "sdk": 3,
   "compatibility": ">= 5.0",
   "author": {
@@ -291,6 +291,19 @@
               "hint": {
                 "en": "Set to reversed for Belgian P1 meters",
                 "nl": "Zet op omdraaien voor Belgische P1 meters"
+              },
+              "value": false
+            },
+            {
+              "id": "filterReadings",
+              "type": "checkbox",
+              "label": {
+                "en": "Filter readings",
+                "nl": "Filter meetwaarden"
+              },
+              "hint": {
+                "en": "Ignore unrealistic meter readings",
+                "nl": "Negeer onrealistische meter waarden"
               },
               "value": false
             }
