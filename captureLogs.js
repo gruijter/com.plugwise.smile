@@ -1,6 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /*
-Copyright 2016 - 2021, Robin de Gruijter (gruijter@hotmail.com)
+Copyright 2016 - 2022, Robin de Gruijter (gruijter@hotmail.com)
 
 This file is part of com.plugwise.smile.
 

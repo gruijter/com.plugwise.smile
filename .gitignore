@@ -3,3 +3,7 @@ config.json
 roadmap.txt
 build
 
+
+
+# Added by Homey CLI
+/.homeybuild/
