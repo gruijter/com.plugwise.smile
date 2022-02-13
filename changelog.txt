@@ -1,3 +1,4 @@
+v4.2.2  2022.02.13 Changed internal FLOW code. Fix flow AND card for tariff sometimes incorrect.
 v4.2.1  2022.01.12 Fix flow start before capabilities update. Log tarrif change.
 v4.2.0  2021.12.16 Fix tariff change flow trigger. Added filter unrealistic values option.
 v4.1.0  2021.12.08 Added support for Belgian P1 (reversed peak-offPeak). smilep1@1.6.1.
