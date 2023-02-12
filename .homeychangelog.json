@@ -19,5 +19,8 @@
   },
   "4.2.2": {
     "en": "Changed internal FLOW code. Fix flow AND card for tariff sometimes incorrect."
+  },
+  "4.2.3": {
+    "en": "Disabled Ledring on HP2023. Update smilep1@1.6.2."
   }
 }

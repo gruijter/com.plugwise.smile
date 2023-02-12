@@ -1,6 +1,6 @@
 {
   "dependencies": {
     "fixture-stdout": "^0.2.1",
-    "smilep1": "^1.6.1"
+    "smilep1": "^1.6.2"
   }
 }

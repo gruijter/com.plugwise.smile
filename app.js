@@ -1,5 +1,5 @@
 /*
-Copyright 2016 - 2022, Robin de Gruijter (gruijter@hotmail.com)
+Copyright 2016 - 2023, Robin de Gruijter (gruijter@hotmail.com)
 
 This file is part of com.plugwise.smile.
 
@@ -20,7 +20,7 @@ along with com.plugwise.smile.  If not, see <http://www.gnu.org/licenses/>.
 'use strict';
 
 const Homey = require('homey');
-const Logger = require('./captureLogs.js');
+const Logger = require('./captureLogs');
 
 class MyApp extends Homey.App {
 

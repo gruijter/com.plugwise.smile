@@ -28,6 +28,7 @@ class Ledring {
 
 	async registerScreensaver(screenSaverId) {
 		try {
+			if (!this.homey.ledring || !this.homey.ledring.createAnimation) return;
 			// init frames cyclops
 			const frame = [];
 			frame.push({ r: 80, g: 0, b: 0 }); // first pixel is red
@@ -55,6 +56,7 @@ class Ledring {
 
 	change(deviceSettings, measurepower) {
 		try {
+			if (!this.animation || !this.animation.updateFrames) return;
 			const frame = [];
 			let limit = ((24 * measurepower) / deviceSettings.ledring_usage_limit).toFixed(0);
 			if (measurepower >= 0) {	// consuming power makes ledring red

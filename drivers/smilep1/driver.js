@@ -1,7 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable prefer-destructuring */
 /*
-Copyright 2016 - 2022, Robin de Gruijter (gruijter@hotmail.com)
+Copyright 2016 - 2023, Robin de Gruijter (gruijter@hotmail.com)
 
 This file is part of com.plugwise.smile.
 
@@ -23,7 +23,7 @@ along with com.plugwise.smile.  If not, see <http://www.gnu.org/licenses/>.
 
 const Homey = require('homey');
 const SmileP1 = require('smilep1');
-const Ledring = require('../../ledring.js');
+const Ledring = require('../../ledring');
 
 class Driver extends Homey.Driver {
 
