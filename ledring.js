@@ -28,7 +28,7 @@ class Ledring {
 
 	async registerScreensaver(screenSaverId) {
 		try {
-			if (!this.homey.ledring || !this.homey.ledring.createAnimation) return;
+			if (this.homey.platformVersion !== 1) return;
 			// init frames cyclops
 			const frame = [];
 			frame.push({ r: 80, g: 0, b: 0 }); // first pixel is red

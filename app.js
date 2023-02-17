@@ -20,12 +20,19 @@ along with com.plugwise.smile.  If not, see <http://www.gnu.org/licenses/>.
 'use strict';
 
 const Homey = require('homey');
+// const inspector = require('inspector');
 const Logger = require('./captureLogs');
 
 class MyApp extends Homey.App {
 
 	onInit() {
 		if (!this.logger) this.logger = new Logger({ homey: this.homey, length: 200 });
+
+		// if (process.env.DEBUG === '1') {
+		// 	try {
+		// 		inspector.waitForDebugger();
+		// 	} catch (error) { inspector.open(9222, '0.0.0.0', true); }
+		// }
 
 		// register some listeners
 		process.on('unhandledRejection', (error) => {
