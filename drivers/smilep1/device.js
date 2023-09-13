@@ -51,7 +51,7 @@ class SmileP1Device extends Device {
 
 			// check for version migration or capability change
 			if (!this.migrated) await this.migrate();
-			await this.setAvailable();
+			await this.setAvailable().catch(this.error);
 
 			// start polling device for info
 			this.startPolling(settings.pollingInterval);
@@ -82,7 +82,7 @@ class SmileP1Device extends Device {
 		// this.destroyListeners();
 		const dly = delay || 2000;
 		this.log(`Device will restart in ${dly / 1000} seconds`);
-		// this.setUnavailable('Device is restarting. Wait a few minutes!');
+		// this.setUnavailable('Device is restarting. Wait a few minutes!').catch(this.error);
 		await setTimeoutPromise(dly).then(() => this.onInit());
 	}
 
@@ -166,7 +166,7 @@ class SmileP1Device extends Device {
 				const caps = this.getCapabilities();
 				const newCap = correctCaps[index];
 				if (caps[index] !== newCap) {
-					this.setUnavailable('Device is migrating. Please wait!');
+					this.setUnavailable('Device is migrating. Please wait!').catch(this.error);
 					// remove all caps from here
 					for (let i = index; i < caps.length; i += 1) {
 						this.log(`removing capability ${caps[i]} for ${this.getName()}`);
@@ -185,7 +185,7 @@ class SmileP1Device extends Device {
 			}
 
 			// set new migrate level
-			this.setSettings({ level: this.homey.app.manifest.version });
+			this.setSettings({ level: this.homey.app.manifest.version }).catch(this.error);
 			this.migrated = true;
 			return Promise.resolve(this.migrated);
 		} catch (error) {
@@ -226,11 +226,11 @@ class SmileP1Device extends Device {
 				this.watchDogCounter -= 1;
 				return;
 			}
-			this.setAvailable();
+			this.setAvailable().catch(this.error);
 			await this.handleNewReadings(readings);
 			this.watchDogCounter = 10;
 		} catch (error) {
-			this.setUnavailable(error.message);
+			this.setUnavailable(error.message).catch(this.error);
 			this.watchDogCounter -= 1;
 			this.error('Poll error', error.message);
 		}

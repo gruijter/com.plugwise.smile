@@ -28,5 +28,8 @@
   },
   "5.0.0": {
     "en": "Added 3-phase info (DSMR4+). Added configurable capabilities. Update smilep1@1.7.0."
+  },
+  "5.0.1": {
+    "en": "Stability fixes."
   }
 }
