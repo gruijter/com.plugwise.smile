@@ -31,5 +31,8 @@
   },
   "5.0.1": {
     "en": "Stability fixes."
+  },
+  "5.1.0": {
+    "en": "Added Homey total imported/exported energy capability. Minor fixes."
   }
 }

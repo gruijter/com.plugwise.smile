@@ -2,5 +2,12 @@
   "dependencies": {
     "fixture-stdout": "^0.2.1",
     "smilep1": "^1.7.0"
+  },
+  "engines": {
+    "node": ">=12.16.1"
+  },
+  "devDependencies": {
+    "eslint": "^7.32.0",
+    "eslint-config-athom": "^3.1.3"
   }
 }

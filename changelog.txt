@@ -1,3 +1,4 @@
+v5.1.0  2024.12.08 Added Homey total imported/exported energy capability. Minor fixes.
 v5.0.0  2023.02.17 Added 3-phase info (DSMR4+). Added configurable capabilities. Update smilep1@1.7.0.
 v4.2.3  2023.02.12 Disabled Ledring on HP2023. Smilep1@1.6.2.
 v4.2.2  2022.02.13 Changed internal FLOW code. Fix flow AND card for tariff sometimes incorrect.

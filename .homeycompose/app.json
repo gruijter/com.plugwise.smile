@@ -28,9 +28,9 @@
       "gas"
     ]
   },
-  "version": "5.0.1",
+  "version": "5.1.0",
   "sdk": 3,
-  "compatibility": ">= 5.0",
+  "compatibility": ">= 8.0",
   "author": {
     "name": "Robin Gruijter",
     "email": "gruijter@hotmail.com"
